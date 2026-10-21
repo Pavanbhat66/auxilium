@@ -25,6 +25,8 @@ function App() {
   const [authError, setAuthError] = useState("");
   const [profileOpen, setProfileOpen] = useState(false);
   const [routeDetails, setRouteDetails] = useState(null);
+  const [mobileControlsOpen, setMobileControlsOpen] = useState(false);
+  const [mobileTab, setMobileTab] = useState("accessibility");
   const routeSegments = useMemo(() => [
     { stairs: false, slope: "low", ramp: true, surface: "good", obstacles: false },
     { stairs: false, slope: "low", ramp: true, surface: "good", obstacles: false },
@@ -117,6 +119,28 @@ function App() {
       <div className="route-summary"><span>Accessibility score</span><strong>{score}<small>/100</small></strong>{routeDetails ? <p>{(routeDetails.distance / 1000).toFixed(2)} km · {Math.round(routeDetails.duration / 60)} min</p> : <p>Choose two points to see a route.</p>}</div>
     </section>
     <div className="map-hint">Click once for your start. Click again for your destination.</div>
+    <div className="mobile-controls">
+      {mobileControlsOpen && <section className="mobile-control-sheet" aria-label="Control center">
+        <div className="sheet-handle" />
+        <div className="mobile-tabs" role="tablist" aria-label="Control center sections">
+          <button className={mobileTab === "accessibility" ? "active" : ""} type="button" onClick={() => setMobileTab("accessibility")}>Accessibility</button>
+          <button className={mobileTab === "route" ? "active" : ""} type="button" onClick={() => setMobileTab("route")}>Route</button>
+        </div>
+        {mobileTab === "accessibility" ? <div className="mobile-tab-content">
+          <p className="sheet-label">Mobility profile</p>
+          <div className="mobile-preference-list" role="group" aria-label="Accessibility profile">
+            {[["general", "General"], ["wheelchair", "Wheelchair"], ["walking_difficulty", "Walking support"]].map(([value, label]) =>
+              <button key={value} className={user.accessibilityProfile === value ? "preference active" : "preference"} type="button" onClick={() => saveUser({ ...user, accessibilityProfile: value })}>{label}</button>,
+            )}
+          </div>
+          <p className="sheet-copy">Your profile adjusts how the prototype requests the route.</p>
+        </div> : <div className="mobile-tab-content route-tab-content">
+          <span>Accessibility score</span><strong>{score}<small>/100</small></strong>
+          {routeDetails ? <p>{(routeDetails.distance / 1000).toFixed(2)} km · {Math.round(routeDetails.duration / 60)} min</p> : <p>Choose two points on the map to see route details.</p>}
+        </div>}
+      </section>}
+      <button className="mobile-control-toggle" type="button" onClick={() => setMobileControlsOpen((open) => !open)} aria-expanded={mobileControlsOpen}>{mobileControlsOpen ? "Close controls" : "Control center"}</button>
+    </div>
     {profileOpen && <div className="dialog-backdrop" role="presentation" onMouseDown={() => setProfileOpen(false)}>
       <section className="profile-dialog" role="dialog" aria-modal="true" aria-labelledby="profile-title" onMouseDown={(event) => event.stopPropagation()}>
         <div className="dialog-heading"><div><p className="eyebrow">Your account</p><h2 id="profile-title">Profile</h2></div><button className="text-button" type="button" onClick={() => setProfileOpen(false)}>Close</button></div>

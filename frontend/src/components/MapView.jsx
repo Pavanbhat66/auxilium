@@ -1,222 +1,58 @@
-import { useEffect, useState } from "react";
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Popup,
-  Polyline,
-  useMapEvents,
-} from "react-leaflet";
+import { useCallback, useEffect, useState } from "react";
+import { MapContainer, Marker, Polyline, Popup, TileLayer, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 
-function LocationSelector({
-  setStart,
-  setDestination,
-  getRoute,
-}) {
-  useMapEvents({
-    click(e) {
-      const location = [e.latlng.lat, e.latlng.lng];
+function waypointFor(profile, start, destination) {
+  if (profile === "general") return null;
+  const [startLat, startLon] = start;
+  const [destinationLat, destinationLon] = destination;
+  const latDifference = destinationLat - startLat;
+  const lonDifference = destinationLon - startLon;
+  const length = Math.hypot(latDifference, lonDifference);
+  if (!length) return null;
+  const offset = 0.0015 * (profile === "wheelchair" ? 1 : -1);
+  return [(startLat + destinationLat) / 2 + (-lonDifference / length) * offset, (startLon + destinationLon) / 2 + (latDifference / length) * offset];
+}
 
-      setStart((currentStart) => {
-        if (!currentStart) {
-          return location;
-        }
-
-        setDestination((currentDestination) => {
-          if (!currentDestination) {
-            getRoute(currentStart, location);
-            return location;
-          }
-
-          return currentDestination;
-        });
-
-        return currentStart;
-      });
-    },
-  });
-
+function LocationSelector({ onLocationPick }) {
+  useMapEvents({ click: (event) => onLocationPick([event.latlng.lat, event.latlng.lng]) });
   return null;
 }
 
-function MapView({ profile }) {
+function MapView({ profile, onRouteChange }) {
   const [start, setStart] = useState(null);
   const [destination, setDestination] = useState(null);
-
   const [route, setRoute] = useState(null);
-  const [distance, setDistance] = useState(null);
-  const [duration, setDuration] = useState(null);
-
-  function getWaypoint(startLocation, destinationLocation) {
-    const startLat = startLocation[0];
-    const startLon = startLocation[1];
-
-    const destinationLat = destinationLocation[0];
-    const destinationLon = destinationLocation[1];
-
-    const midLat = (startLat + destinationLat) / 2;
-    const midLon = (startLon + destinationLon) / 2;
-
-    const latDifference =
-      destinationLat - startLat;
-
-    const lonDifference =
-      destinationLon - startLon;
-
-    const length = Math.sqrt(
-      latDifference * latDifference +
-      lonDifference * lonDifference
-    );
-
-    if (length === 0) {
-      return null;
-    }
-
-    const perpendicularLat =
-      -lonDifference / length;
-
-    const perpendicularLon =
-      latDifference / length;
-
-    const offset = 0.0015;
-
-    if (profile === "wheelchair") {
-      return [
-        midLat + perpendicularLat * offset,
-        midLon + perpendicularLon * offset,
-      ];
-    }
-
-    if (profile === "walking_difficulty") {
-      return [
-        midLat - perpendicularLat * offset,
-        midLon - perpendicularLon * offset,
-      ];
-    }
-
-    return null;
-  }
-
-  async function getRoute(
-    startLocation,
-    destinationLocation
-  ) {
-    let coordinates;
-
-    const waypoint = getWaypoint(
-      startLocation,
-      destinationLocation
-    );
-
-    if (profile === "general" || !waypoint) {
-      coordinates =
-        `${startLocation[1]},${startLocation[0]};` +
-        `${destinationLocation[1]},${destinationLocation[0]}`;
-    } else {
-      coordinates =
-        `${startLocation[1]},${startLocation[0]};` +
-        `${waypoint[1]},${waypoint[0]};` +
-        `${destinationLocation[1]},${destinationLocation[0]}`;
-    }
-
-    const url =
-      `https://router.project-osrm.org/route/v1/foot/` +
-      `${coordinates}` +
-      `?overview=full&geometries=geojson`;
-
+  const fetchRoute = useCallback(async (startLocation, destinationLocation) => {
+    const waypoint = waypointFor(profile, startLocation, destinationLocation);
+    const points = waypoint ? [startLocation, waypoint, destinationLocation] : [startLocation, destinationLocation];
+    const coordinates = points.map(([lat, lon]) => `${lon},${lat}`).join(";");
     try {
-      const response = await fetch(url);
+      const response = await fetch(`https://router.project-osrm.org/route/v1/foot/${coordinates}?overview=full&geometries=geojson`);
       const data = await response.json();
-
-      if (data.code !== "Ok" || !data.routes.length) {
-        console.log("No route found.");
-        return;
-      }
-
+      if (data.code !== "Ok" || !data.routes?.length) return;
       const routeData = data.routes[0];
-
-      const routeCoordinates =
-        routeData.geometry.coordinates.map(
-          ([longitude, latitude]) => [
-            latitude,
-            longitude,
-          ]
-        );
-
-      setRoute(routeCoordinates);
-      setDistance(routeData.distance);
-      setDuration(routeData.duration);
-    } catch (error) {
-      console.error("Routing error:", error);
+      setRoute(routeData.geometry.coordinates.map(([lon, lat]) => [lat, lon]));
+      onRouteChange({ distance: routeData.distance, duration: routeData.duration });
+    } catch {
+      setRoute(null);
+      onRouteChange(null);
     }
+  }, [onRouteChange, profile]);
+
+  useEffect(() => { if (start && destination) fetchRoute(start, destination); }, [destination, fetchRoute, start]);
+  function handleLocationPick(location) {
+    if (!start || destination) {
+      setStart(location); setDestination(null); setRoute(null); onRouteChange(null);
+    } else setDestination(location);
   }
-
-  useEffect(() => {
-    if (start && destination) {
-      getRoute(start, destination);
-    }
-  }, [profile]);
-
-  return (
-    <div>
-      <MapContainer
-        center={[12.899738, 74.983481]}
-        zoom={30}
-        style={{
-          height: "500px",
-          width: "100%",
-        }}
-      >
-        <TileLayer
-          attribution="&copy; OpenStreetMap contributors"
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-
-        <LocationSelector
-          setStart={setStart}
-          setDestination={setDestination}
-          getRoute={getRoute}
-        />
-
-        {start && (
-          <Marker position={start}>
-            <Popup>Start Location</Popup>
-          </Marker>
-        )}
-
-        {destination && (
-          <Marker position={destination}>
-            <Popup>Destination</Popup>
-          </Marker>
-        )}
-
-        {route && (
-          <Polyline
-            positions={route}
-            pathOptions={{
-              weight: 6,
-            }}
-          />
-        )}
-      </MapContainer>
-
-      {distance !== null && duration !== null && (
-        <div>
-          <h3>Route</h3>
-
-          <p>
-            Distance: {(distance / 1000).toFixed(2)} km
-          </p>
-
-          <p>
-            Estimated time:{" "}
-            {Math.round(duration / 60)} minutes
-          </p>
-        </div>
-      )}
-    </div>
-  );
+  return <div className="map-canvas"><MapContainer center={[12.899738, 74.983481]} zoom={16} className="leaflet-map" zoomControl={false}>
+    <TileLayer attribution="&copy; OpenStreetMap contributors" url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+    <LocationSelector onLocationPick={handleLocationPick} />
+    {start && <Marker position={start}><Popup>Start location</Popup></Marker>}
+    {destination && <Marker position={destination}><Popup>Destination</Popup></Marker>}
+    {route && <Polyline positions={route} pathOptions={{ color: "#2351d8", weight: 6, opacity: 0.86 }} />}
+  </MapContainer></div>;
 }
 
 export default MapView;

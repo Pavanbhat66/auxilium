@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { MapContainer, Marker, Polyline, Popup, TileLayer, useMapEvents } from "react-leaflet";
+import { CircleMarker, MapContainer, Marker, Polyline, Popup, TileLayer, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 
 function waypointFor(profile, start, destination) {
@@ -23,6 +23,14 @@ function MapView({ profile, onRouteChange }) {
   const [start, setStart] = useState(null);
   const [destination, setDestination] = useState(null);
   const [route, setRoute] = useState(null);
+  const [mapillaryEvidence, setMapillaryEvidence] = useState([]);
+
+  useEffect(() => {
+    fetch("/data/mangalore_mapillary_accessibility.geojson")
+      .then((response) => response.ok ? response.json() : null)
+      .then((data) => setMapillaryEvidence(data?.features || []))
+      .catch(() => setMapillaryEvidence([]));
+  }, []);
   const fetchRoute = useCallback(async (startLocation, destinationLocation) => {
     const waypoint = waypointFor(profile, startLocation, destinationLocation);
     const points = waypoint ? [startLocation, waypoint, destinationLocation] : [startLocation, destinationLocation];
@@ -51,6 +59,13 @@ function MapView({ profile, onRouteChange }) {
     <LocationSelector onLocationPick={handleLocationPick} />
     {start && <Marker position={start}><Popup>Start location</Popup></Marker>}
     {destination && <Marker position={destination}><Popup>Destination</Popup></Marker>}
+    {mapillaryEvidence.map((feature) => {
+      const [longitude, latitude] = feature.geometry.coordinates;
+      const properties = feature.properties;
+      return <CircleMarker key={feature.id} center={[latitude, longitude]} radius={6} pathOptions={{ color: "#c47b00", fillColor: "#f2b84b", fillOpacity: 0.9 }}>
+        <Popup><strong>Mapillary evidence: {properties.evidence_type}</strong><br />Status: needs review<br />Raw detection: {properties.raw_value || "unknown"}</Popup>
+      </CircleMarker>;
+    })}
     {route && <Polyline positions={route} pathOptions={{ color: "#2351d8", weight: 6, opacity: 0.86 }} />}
   </MapContainer></div>;
 }

@@ -24,6 +24,9 @@ input:focus { border-color: #2351d8; box-shadow: 0 0 0 3px #e7edff; }
 .primary-button { min-height: 50px; background: #2351d8; color: #fff; padding: 0 19px; }
 .primary-button:hover { background: #173fae; }
 .primary-button:active, .account-button:active { transform: translateY(1px); }
+.google-button { width: 100%; min-height: 50px; border: 1px solid #cbd2df; border-radius: 8px; background: #fff; color: #172033; font-weight: 600; transition: background .18s, border-color .18s; }
+.google-button:hover:not(:disabled) { background: #f7f9fc; border-color: #9da8bb; }
+.google-button:disabled { cursor: not-allowed; opacity: .55; }
 .form-error { color: #a52a2a; font-size: 13px; margin: -7px 0 0; }
 .local-note { color: #8992a3; font-size: 12px; line-height: 1.55; margin: 19px 0 0; }
 .auth-aside { min-height: 100%; display: flex; align-items: end; padding: clamp(40px, 8vw, 110px); background: linear-gradient(150deg, #18348b, #2351d8 58%, #92aaf5); color: #fff; }

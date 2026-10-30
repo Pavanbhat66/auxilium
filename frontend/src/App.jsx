@@ -1,17 +1,8 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import MapView from "./components/MapView";
 import { calculateRouteScore } from "./utils/accessibility";
-
-const USERS_KEY = "auxilium-users";
-const SESSION_KEY = "auxilium-session";
-
-function readStoredValue(key, fallback) {
-  try {
-    return JSON.parse(localStorage.getItem(key)) || fallback;
-  } catch {
-    return fallback;
-  }
-}
+import { firebaseConfigured } from "./lib/firebase";
+import { createAppUser, loadUserProfile, logOut, observeSession, saveUserProfile, signInWithGoogle } from "./services/auth";
 
 function profileLabel(profile) {
   if (profile === "wheelchair") return "Wheelchair";
@@ -20,13 +11,38 @@ function profileLabel(profile) {
 }
 
 function App() {
-  const [user, setUser] = useState(() => readStoredValue(SESSION_KEY, null));
-  const [authMode, setAuthMode] = useState("login");
+  const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
   const [authError, setAuthError] = useState("");
   const [profileOpen, setProfileOpen] = useState(false);
   const [routeDetails, setRouteDetails] = useState(null);
   const [mobileControlsOpen, setMobileControlsOpen] = useState(false);
   const [mobileTab, setMobileTab] = useState("accessibility");
+
+  useEffect(() => {
+    if (!firebaseConfigured) {
+      setAuthLoading(false);
+      return undefined;
+    }
+    return observeSession(async (firebaseUser) => {
+      if (!firebaseUser) {
+        setUser(null);
+        setAuthLoading(false);
+        return;
+      }
+      setUser(createAppUser(firebaseUser));
+      setAuthLoading(false);
+      try {
+        const profile = await loadUserProfile(firebaseUser);
+        if (profile) setUser((currentUser) => currentUser?.id === profile.id ? profile : currentUser);
+      } catch {
+        setAuthError("Signed in successfully. Cloud profile sync is unavailable right now.");
+      }
+    }, (error) => {
+      setAuthError(error.message);
+      setAuthLoading(false);
+    });
+  }, []);
   const routeSegments = useMemo(() => [
     { stairs: false, slope: "low", ramp: true, surface: "good", obstacles: false },
     { stairs: false, slope: "low", ramp: true, surface: "good", obstacles: false },
@@ -34,49 +50,45 @@ function App() {
   ], []);
   const score = calculateRouteScore(user?.accessibilityProfile || "general", routeSegments);
 
-  function saveUser(nextUser) {
-    const users = readStoredValue(USERS_KEY, []).map((storedUser) =>
-      storedUser.id === nextUser.id ? nextUser : storedUser,
-    );
-    localStorage.setItem(USERS_KEY, JSON.stringify(users));
-    localStorage.setItem(SESSION_KEY, JSON.stringify(nextUser));
-    setUser(nextUser);
-  }
-
-  function handleAuth(event) {
-    event.preventDefault();
-    const form = new FormData(event.currentTarget);
-    const email = form.get("email").trim().toLowerCase();
-    const password = form.get("password");
-    const name = form.get("name")?.trim();
-    const users = readStoredValue(USERS_KEY, []);
-
-    if (authMode === "signup") {
-      if (!name || !email || !password) return setAuthError("Complete each field to create your account.");
-      if (users.some((storedUser) => storedUser.email === email)) return setAuthError("An account already exists for this email.");
-      const nextUser = { id: crypto.randomUUID(), name, email, password, accessibilityProfile: "general" };
-      localStorage.setItem(USERS_KEY, JSON.stringify([...users, nextUser]));
-      localStorage.setItem(SESSION_KEY, JSON.stringify(nextUser));
+  async function saveUser(nextUser) {
+    try {
+      await saveUserProfile(nextUser);
       setUser(nextUser);
-      return;
+    } catch (error) {
+      setAuthError(error.message);
     }
-
-    const matchingUser = users.find((storedUser) => storedUser.email === email && storedUser.password === password);
-    if (!matchingUser) return setAuthError("Email or password is incorrect.");
-    localStorage.setItem(SESSION_KEY, JSON.stringify(matchingUser));
-    setUser(matchingUser);
   }
 
-  function switchAuthMode(mode) {
-    setAuthMode(mode);
+  async function handleGoogleSignIn() {
     setAuthError("");
+    try {
+      await signInWithGoogle();
+    } catch (error) {
+      if (error.code === "auth/unauthorized-domain") {
+        setAuthError(`This app domain is not authorized in Firebase: ${window.location.hostname}.`);
+      } else if (error.code === "auth/operation-not-allowed") {
+        setAuthError("Google sign-in is not enabled in Firebase Authentication.");
+      } else if (error.code === "auth/api-key-not-valid") {
+        setAuthError("The Firebase web API key is invalid. Copy the current web app config into frontend/.env.local.");
+      } else if (error.code === "auth/popup-blocked") {
+        setAuthError("Your browser blocked the Google sign-in window. Allow popups for localhost and try again.");
+      } else if (error.code === "auth/popup-closed-by-user") {
+        setAuthError("Google sign-in was cancelled.");
+      } else if (error.code === "auth/network-request-failed") {
+        setAuthError("Unable to reach Firebase. Check your internet connection and try again.");
+      } else {
+        setAuthError(error.message);
+      }
+    }
   }
 
-  function signOut() {
-    localStorage.removeItem(SESSION_KEY);
+  async function handleSignOut() {
+    await logOut();
     setProfileOpen(false);
     setUser(null);
   }
+
+  if (authLoading) return <main className="auth-page"><section className="auth-panel"><p className="eyebrow">AUXILIUM</p><h1>Checking your session…</h1></section></main>;
 
   if (!user) {
     return <main className="auth-page">
@@ -84,18 +96,10 @@ function App() {
         <p className="eyebrow">AUXILIUM</p>
         <h1 id="auth-title">Move through your city with more clarity.</h1>
         <p className="auth-intro">Plan routes with your mobility needs in view.</p>
-        <div className="auth-tabs" role="tablist" aria-label="Account actions">
-          <button className={authMode === "login" ? "active" : ""} onClick={() => switchAuthMode("login")} type="button">Log in</button>
-          <button className={authMode === "signup" ? "active" : ""} onClick={() => switchAuthMode("signup")} type="button">Sign up</button>
-        </div>
-        <form className="auth-form" onSubmit={handleAuth}>
-          {authMode === "signup" && <label>Full name<input name="name" autoComplete="name" placeholder="Your name" /></label>}
-          <label>Email<input name="email" type="email" autoComplete="email" placeholder="you@example.com" required /></label>
-          <label>Password<input name="password" type="password" autoComplete={authMode === "signup" ? "new-password" : "current-password"} placeholder="Your password" required /></label>
-          {authError && <p className="form-error" role="alert">{authError}</p>}
-          <button className="primary-button" type="submit">{authMode === "signup" ? "Create account" : "Continue"}</button>
-        </form>
-        <p className="local-note">This prototype stores account details only in this browser.</p>
+        {authError && <p className="form-error" role="alert">{authError}</p>}
+        {!firebaseConfigured && <p className="form-error" role="alert">Firebase is not configured yet. Add the project values to <code>frontend/.env.local</code>.</p>}
+        <button className="google-button" type="button" onClick={handleGoogleSignIn} disabled={!firebaseConfigured}>Continue with Google</button>
+        <p className="local-note">Your account and mobility profile are stored securely through Firebase.</p>
       </section>
       <aside className="auth-aside"><p>Accessible journeys begin with a route that considers you.</p></aside>
     </main>;
@@ -148,7 +152,7 @@ function App() {
         <label className="profile-field">Email<input value={user.email} readOnly /></label>
         <div className="profile-current"><span>Current mobility profile</span><strong>{profileLabel(user.accessibilityProfile)}</strong></div>
         <button className="primary-button" type="button" onClick={() => { saveUser(user); setProfileOpen(false); }}>Save profile</button>
-        <button className="secondary-button" type="button" onClick={signOut}>Log out</button>
+        <button className="secondary-button" type="button" onClick={handleSignOut}>Log out</button>
       </section>
     </div>}
   </main>;

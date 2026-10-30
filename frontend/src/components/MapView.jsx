@@ -1,5 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
+<<<<<<< HEAD
 import { Circle, CircleMarker, MapContainer, Marker, Polyline, Popup, TileLayer, useMap, useMapEvents } from "react-leaflet";
+=======
+import { CircleMarker, MapContainer, Marker, Polyline, Popup, TileLayer, useMapEvents } from "react-leaflet";
+>>>>>>> 589f33e44c45d54986e0ef84971fec4ee1c80ffa
 import "leaflet/dist/leaflet.css";
 
 function LocationSelector({ onLocationPick }) {
@@ -32,6 +36,7 @@ function LocationTracker({ enabled, onLocation, onError }) {
 function MapView({ onRouteChange }) {
   const [start, setStart] = useState(null);
   const [destination, setDestination] = useState(null);
+<<<<<<< HEAD
   const [routes, setRoutes] = useState([]);
   const [selectedRouteIndex, setSelectedRouteIndex] = useState(0);
   const [tracking, setTracking] = useState(false);
@@ -44,6 +49,16 @@ function MapView({ onRouteChange }) {
   const handleLocationError = useCallback((message) => {
     setLocationError(message);
     setTracking(false);
+=======
+  const [route, setRoute] = useState(null);
+  const [mapillaryEvidence, setMapillaryEvidence] = useState([]);
+
+  useEffect(() => {
+    fetch("/data/mangalore_mapillary_accessibility.geojson")
+      .then((response) => response.ok ? response.json() : null)
+      .then((data) => setMapillaryEvidence(data?.features || []))
+      .catch(() => setMapillaryEvidence([]));
+>>>>>>> 589f33e44c45d54986e0ef84971fec4ee1c80ffa
   }, []);
   const fetchRoute = useCallback(async (startLocation, destinationLocation) => {
     const points = [startLocation, destinationLocation];
@@ -95,6 +110,7 @@ function MapView({ onRouteChange }) {
     <LocationTracker enabled={tracking} onLocation={handleLocationUpdate} onError={handleLocationError} />
     {start && <Marker position={start}><Popup>Start location</Popup></Marker>}
     {destination && <Marker position={destination}><Popup>Destination</Popup></Marker>}
+<<<<<<< HEAD
     {currentLocation && <><Circle center={currentLocation.point} radius={currentLocation.accuracy} pathOptions={{ color: "#2351d8", fillColor: "#2351d8", fillOpacity: 0.12, weight: 1 }} /><CircleMarker center={currentLocation.point} radius={8} pathOptions={{ color: "#fff", weight: 3, fillColor: "#2351d8", fillOpacity: 1 }}><Popup>Your live location</Popup></CircleMarker></>}
     {routes.map((route, index) => <Polyline key={`${index}-${route.distance}`} positions={route.points} eventHandlers={{ click: () => selectRoute(index) }} pathOptions={{ color: index === selectedRouteIndex ? "#2351d8" : "#68758a", weight: index === selectedRouteIndex ? 7 : 4, opacity: index === selectedRouteIndex ? 0.9 : 0.52 }} />)}
   </MapContainer>
@@ -110,6 +126,17 @@ function MapView({ onRouteChange }) {
     </button>)}
   </section>}
   </div>;
+=======
+    {mapillaryEvidence.map((feature) => {
+      const [longitude, latitude] = feature.geometry.coordinates;
+      const properties = feature.properties;
+      return <CircleMarker key={feature.id} center={[latitude, longitude]} radius={6} pathOptions={{ color: "#c47b00", fillColor: "#f2b84b", fillOpacity: 0.9 }}>
+        <Popup><strong>Mapillary evidence: {properties.evidence_type}</strong><br />Status: needs review<br />Raw detection: {properties.raw_value || "unknown"}</Popup>
+      </CircleMarker>;
+    })}
+    {route && <Polyline positions={route} pathOptions={{ color: "#2351d8", weight: 6, opacity: 0.86 }} />}
+  </MapContainer></div>;
+>>>>>>> 589f33e44c45d54986e0ef84971fec4ee1c80ffa
 }
 
 export default MapView;

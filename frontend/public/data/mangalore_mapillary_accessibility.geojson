@@ -1,0 +1,88 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "mapillary_detection_2899502876935017",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          74.813013130585,
+          12.902830004871
+        ]
+      },
+      "properties": {
+        "city": "mangalore",
+        "source": "mapillary",
+        "mapillary_image_id": "2890914187793886",
+        "mapillary_detection_id": "2899502876935017",
+        "captured_at": 1541486427182,
+        "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
+        "thumbnail_url": "https://scontent.fixe1-2.fna.fbcdn.net/m1/v/t6/AQOeFqMbTA-WrWzJ-H9YECBBE2naKR7DxT7cn--IqSE2-7l_p8eASV1u37OQh8o9as6jgCv7kdfR9P7gH-dv35Kfn8aOW-YrVijLf1r2rl7RurX33VXlaikiA9jnQvGfOhS5o_if83uakXNjjBOfbmzCh9w8yCLsXO8ci99zUMkBXw?stp=s1024x768&edm=AOnQwmMEAAAA&_nc_gid=QiDLwAkmzZDqXPbKieoKWg&_nc_oc=AdrdIWJargU0hqoj8DQaoe0-AcKucMsoJc7gDdyd_pFf2Rb46ojC2MJSs_zSRJZmcQF76d6gFZQqpZDvnSsX6TZ7&ccb=10-5&oh=00_AQPFho4Tp8qz-g06cfdWcGU5hF_KO3j6t8_yXl8coxybQQ&oe=6B07C235&_nc_sid=201bca",
+      "evidence_type": "construction",
+        "raw_value": "construction--flat--driveway",
+        "verification_status": "needs_review",
+        "accessibility_claim": "unknown"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "mapillary_detection_204882838122633",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          74.813014600639,
+          12.902776623178
+        ]
+      },
+      "properties": {
+        "city": "mangalore",
+        "source": "mapillary",
+        "mapillary_image_id": "197736268837290",
+        "mapillary_detection_id": "204882838122633",
+        "captured_at": 1541486428171,
+        "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
+        "thumbnail_url": "https://scontent.fixe1-2.fna.fbcdn.net/m1/v/t6/AQN73tFCoqFhKe7okK4z0cHFEMySssNiY0sD8AtA3TYtdsKjGcC9cBrV8R10Cn041W1BdGASDn0ktQG2LlIIJkzs4QdBDP4vYSXb1c8DBCE0qKKYMrCZbvug57ng33FN5dfDUIkmu_uECfxWEl8h20Jaepn0I1h-ZS4RVHVzRr6cJw?stp=s1024x768&edm=AOnQwmMEAAAA&_nc_gid=QiDLwAkmzZDqXPbKieoKWg&_nc_oc=AdrOGbbGufecTYUNxyhXtMAyLI62kj5GqwPaXACLKUBgb088DslNUqUZGsTxC0x_mkSWdScSMrUudKx9aBaCLiVp&ccb=10-5&oh=00_AQPX12hszWPVKfLwa18cUYolv_vj_NmhMT9zvGgKiyvvFw&oe=6B0796BA&_nc_sid=201bca",
+      "evidence_type": "construction",
+        "raw_value": "construction--flat--driveway",
+        "verification_status": "needs_review",
+        "accessibility_claim": "unknown"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "mapillary_detection_2870281449968138",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          74.813018879521,
+          12.90267877029
+        ]
+      },
+      "properties": {
+        "city": "mangalore",
+        "source": "mapillary",
+        "mapillary_image_id": "2861634120832871",
+        "mapillary_detection_id": "2870281449968138",
+        "captured_at": 1541486429179,
+        "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
+        "thumbnail_url": "https://scontent.fixe1-2.fna.fbcdn.net/m1/v/t6/AQNOYebMGJPVJRc9b8NztrwfIn4gQe5aJ8nouUEYkJzuFjwkFNltFbpTVj1jqSedNCQkmNMiqtSWw3McmfCijvXb899sEo_q32gvSJgJYen-X0FlG6pRWBp5REeUu_BblYge9BqrdV3bD4Ltf2qxoBT-CRWC9lY3tslYAqNkcILbOg?stp=s1024x768&edm=AOnQwmMEAAAA&_nc_gid=QiDLwAkmzZDqXPbKieoKWg&_nc_oc=AdpFCKkQa6qeVUfJJh8i7XoN9bD-rk7TJvp5DzTPn-YoeqE8q59FZMMt9iUimVzRvhzeLmTHIoz5l26oxB_X50io&ccb=10-5&oh=00_AQOSljg_OoFhN_i2Y1jZVHOOfct9-P1nWGfHQabdOlyeKg&oe=6B07BC4A&_nc_sid=201bca",
+      "evidence_type": "construction",
+        "raw_value": "construction--flat--driveway",
+        "verification_status": "needs_review",
+        "accessibility_claim": "unknown"
+      }
+    }
+  ],
+  "metadata": {
+    "city": "mangalore",
+    "bbox": [
+      74.78,
+      12.8,
+      75.05,
+      13.0
+    ],
+    "source": "mapillary",
+    "note": "Evidence only. Review before using for accessible routing."
+  }
+}

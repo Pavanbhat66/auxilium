@@ -1,9 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-<<<<<<< HEAD
 import { Circle, CircleMarker, MapContainer, Marker, Polyline, Popup, TileLayer, useMap, useMapEvents } from "react-leaflet";
-=======
-import { CircleMarker, MapContainer, Marker, Polyline, Popup, TileLayer, useMapEvents } from "react-leaflet";
->>>>>>> 78fa4a37380290c9a1fedf8473b1ef448bd84265
 import "leaflet/dist/leaflet.css";
 
 function LocationSelector({ onLocationPick }) {
@@ -11,18 +7,34 @@ function LocationSelector({ onLocationPick }) {
   return null;
 }
 
+function LocationTracker({ enabled, onLocation, onError }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!enabled) return undefined;
+    const handleFound = (event) => onLocation({ point: [event.latlng.lat, event.latlng.lng], accuracy: event.accuracy });
+    const handleError = (event) => onError(event.message || "Your location could not be determined.");
+    map.on("locationfound", handleFound);
+    map.on("locationerror", handleError);
+    map.locate({ watch: true, enableHighAccuracy: true, setView: true, maxZoom: 18, timeout: 15000, maximumAge: 5000 });
+    return () => {
+      map.stopLocate();
+      map.off("locationfound", handleFound);
+      map.off("locationerror", handleError);
+    };
+  }, [enabled, map, onError, onLocation]);
+
+  return null;
+}
+
 function MapView({ onRouteChange }) {
   const [start, setStart] = useState(null);
   const [destination, setDestination] = useState(null);
-<<<<<<< HEAD
   const [routes, setRoutes] = useState([]);
   const [selectedRouteIndex, setSelectedRouteIndex] = useState(0);
   const [tracking, setTracking] = useState(false);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [locationError, setLocationError] = useState("");
-=======
-  const [route, setRoute] = useState(null);
->>>>>>> 78fa4a37380290c9a1fedf8473b1ef448bd84265
   const [mapillaryEvidence, setMapillaryEvidence] = useState([]);
 
   useEffect(() => {
@@ -30,7 +42,6 @@ function MapView({ onRouteChange }) {
       .then((response) => response.ok ? response.json() : null)
       .then((data) => setMapillaryEvidence(data?.features || []))
       .catch(() => setMapillaryEvidence([]));
-<<<<<<< HEAD
   }, []);
 
   const handleLocationUpdate = useCallback((location) => {
@@ -40,35 +51,42 @@ function MapView({ onRouteChange }) {
   const handleLocationError = useCallback((message) => {
     setLocationError(message);
     setTracking(false);
-=======
->>>>>>> 78fa4a37380290c9a1fedf8473b1ef448bd84265
   }, []);
-  const fetchRoute = useCallback(async (startLocation, destinationLocation) => {
+
+  const fetchRoute = useCallback(async (startLocation, destinationLocation, signal) => {
     const coordinates = [startLocation, destinationLocation].map(([lat, lon]) => `${lon},${lat}`).join(";");
     try {
-      const response = await fetch(`https://router.project-osrm.org/route/v1/foot/${coordinates}?overview=full&geometries=geojson`);
+      const response = await fetch(`https://router.project-osrm.org/route/v1/foot/${coordinates}?alternatives=3&overview=full&geometries=geojson`, { signal });
       const data = await response.json();
       if (!response.ok || data.code !== "Ok" || !data.routes?.length) {
-        setRoute(null);
+        setRoutes([]);
         onRouteChange(null);
         return;
       }
-      const routeData = data.routes[0];
-      setRoute(routeData.geometry.coordinates.map(([lon, lat]) => [lat, lon]));
-      onRouteChange({ distance: routeData.distance, duration: routeData.duration });
-    } catch {
-      setRoute(null);
+      const routeOptions = data.routes.map((routeData) => ({
+        points: routeData.geometry.coordinates.map(([lon, lat]) => [lat, lon]),
+        distance: routeData.distance,
+        duration: routeData.duration,
+      }));
+      setRoutes(routeOptions);
+      setSelectedRouteIndex(0);
+      onRouteChange({ distance: routeOptions[0].distance, duration: routeOptions[0].duration });
+    } catch (error) {
+      if (error.name === "AbortError") return;
+      setRoutes([]);
       onRouteChange(null);
     }
   }, [onRouteChange]);
 
   useEffect(() => {
-    if (start && destination) fetchRoute(start, destination);
+    if (!start || !destination) return undefined;
+    const controller = new AbortController();
+    fetchRoute(start, destination, controller.signal);
+    return () => controller.abort();
   }, [destination, fetchRoute, start]);
 
   function handleLocationPick(location) {
     if (!start || destination) {
-<<<<<<< HEAD
       setStart(location);
       setDestination(null);
       setRoutes([]);
@@ -125,25 +143,6 @@ function MapView({ onRouteChange }) {
       </button>)}
     </section>}
   </div>;
-=======
-      setStart(location); setDestination(null); setRoute(null); onRouteChange(null);
-    } else setDestination(location);
-  }
-  return <div className="map-canvas"><MapContainer center={[12.899738, 74.983481]} zoom={16} className="leaflet-map" zoomControl={false}>
-    <TileLayer attribution="&copy; OpenStreetMap contributors" url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-    <LocationSelector onLocationPick={handleLocationPick} />
-    {start && <Marker position={start}><Popup>Start location</Popup></Marker>}
-    {destination && <Marker position={destination}><Popup>Destination</Popup></Marker>}
-    {mapillaryEvidence.map((feature) => {
-      const [longitude, latitude] = feature.geometry.coordinates;
-      const properties = feature.properties;
-      return <CircleMarker key={feature.id} center={[latitude, longitude]} radius={6} pathOptions={{ color: "#c47b00", fillColor: "#f2b84b", fillOpacity: 0.9 }}>
-        <Popup><strong>Mapillary evidence: {properties.evidence_type}</strong><br />Status: needs review<br />Raw detection: {properties.raw_value || "unknown"}</Popup>
-      </CircleMarker>;
-    })}
-    {route && <Polyline positions={route} pathOptions={{ color: "#2351d8", weight: 6, opacity: 0.86 }} />}
-  </MapContainer></div>;
->>>>>>> 78fa4a37380290c9a1fedf8473b1ef448bd84265
 }
 
 export default MapView;

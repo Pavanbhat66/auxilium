@@ -110,7 +110,7 @@ function App() {
     </header>
     <section className="route-panel" aria-label="Route settings">
       <p className="eyebrow">Route preferences</p><h1>Plan your way</h1>
-      <p className="panel-copy">Your selected profile adjusts how this prototype requests a route.</p>
+      <p className="panel-copy">Compare road-network route options. Accessibility conditions are not yet used to filter them.</p>
       <div className="preference-list" role="group" aria-label="Accessibility profile">
         {[["general", "General"], ["wheelchair", "Wheelchair"], ["walking_difficulty", "Walking support"]].map(([value, label]) =>
           <button key={value} className={user.accessibilityProfile === value ? "preference active" : "preference"} type="button" onClick={() => saveUser({ ...user, accessibilityProfile: value })}>{label}</button>,
@@ -133,7 +133,7 @@ function App() {
               <button key={value} className={user.accessibilityProfile === value ? "preference active" : "preference"} type="button" onClick={() => saveUser({ ...user, accessibilityProfile: value })}>{label}</button>,
             )}
           </div>
-          <p className="sheet-copy">Your profile adjusts how the prototype requests the route.</p>
+          <p className="sheet-copy">Routes are not yet filtered by accessibility conditions.</p>
         </div> : <div className="mobile-tab-content route-tab-content">
           <span>Accessibility score</span><strong>{score}<small>/100</small></strong>
           {routeDetails ? <p>{(routeDetails.distance / 1000).toFixed(2)} km · {Math.round(routeDetails.duration / 60)} min</p> : <p>Choose two points on the map to see route details.</p>}

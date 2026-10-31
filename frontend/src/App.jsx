@@ -16,6 +16,7 @@ function App() {
   const [authError, setAuthError] = useState("");
   const [profileOpen, setProfileOpen] = useState(false);
   const [routeDetails, setRouteDetails] = useState(null);
+  const [profileError, setProfileError] = useState("");
   const [mobileControlsOpen, setMobileControlsOpen] = useState(false);
   const [mobileTab, setMobileTab] = useState("accessibility");
 
@@ -51,11 +52,14 @@ function App() {
   const score = calculateRouteScore(user?.accessibilityProfile || "general", routeSegments);
 
   async function saveUser(nextUser) {
+    const previousUser = user;
+    setProfileError("");
+    setUser(nextUser);
     try {
       await saveUserProfile(nextUser);
-      setUser(nextUser);
     } catch (error) {
-      setAuthError(error.message);
+      setUser(previousUser);
+      setProfileError(`Could not save your mobility profile: ${error.message}`);
     }
   }
 
@@ -120,6 +124,7 @@ function App() {
           <button key={value} className={user.accessibilityProfile === value ? "preference active" : "preference"} type="button" onClick={() => saveUser({ ...user, accessibilityProfile: value })}>{label}</button>,
         )}
       </div>
+      {profileError && <p className="form-error" role="alert">{profileError}</p>}
       <div className="route-summary"><span>Accessibility score</span><strong>{score}<small>/100</small></strong>{routeDetails ? <p>{(routeDetails.distance / 1000).toFixed(2)} km · {Math.round(routeDetails.duration / 60)} min</p> : <p>Choose two points to see a route.</p>}</div>
     </section>
     <div className="map-hint">Click once for your start. Click again for your destination.</div>

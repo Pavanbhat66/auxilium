@@ -52,14 +52,13 @@ function App() {
   const score = calculateRouteScore(user?.accessibilityProfile || "general", routeSegments);
 
   async function saveUser(nextUser) {
-    const previousUser = user;
     setProfileError("");
     setUser(nextUser);
     try {
       await saveUserProfile(nextUser);
     } catch (error) {
-      setUser(previousUser);
-      setProfileError(`Could not save your mobility profile: ${error.message}`);
+      // Keep the local change usable even when Firestore rules are not configured.
+      setProfileError(`Profile changed on this device, but could not sync to the cloud: ${error.message}`);
     }
   }
 
@@ -156,6 +155,15 @@ function App() {
         <label className="profile-field">Name<input value={user.name} onChange={(event) => setUser({ ...user, name: event.target.value })} /></label>
         <label className="profile-field">Email<input value={user.email} readOnly /></label>
         <div className="profile-current"><span>Current mobility profile</span><strong>{profileLabel(user.accessibilityProfile)}</strong></div>
+        <div className="profile-field">
+          <span>Change mobility profile</span>
+          <div className="mobile-preference-list" role="group" aria-label="Change accessibility profile">
+            {[['general', 'General'], ['wheelchair', 'Wheelchair'], ['walking_difficulty', 'Walking support']].map(([value, label]) =>
+              <button key={value} className={user.accessibilityProfile === value ? "preference active" : "preference"} type="button" onClick={() => saveUser({ ...user, accessibilityProfile: value })}>{label}</button>,
+            )}
+          </div>
+        </div>
+        {profileError && <p className="form-error" role="alert">{profileError}</p>}
         <button className="primary-button" type="button" onClick={() => { saveUser(user); setProfileOpen(false); }}>Save profile</button>
         <button className="secondary-button" type="button" onClick={handleSignOut}>Log out</button>
       </section>

@@ -9,6 +9,7 @@ function App() {
   const [authLoading, setAuthLoading] = useState(true);
   const [authError, setAuthError] = useState("");
   const [profilePage, setProfilePage] = useState(false);
+  const [profileEditing, setProfileEditing] = useState(false);
   const [routeDetails, setRouteDetails] = useState(null);
   const [profileError, setProfileError] = useState("");
   const [mobileControlsOpen, setMobileControlsOpen] = useState(false);
@@ -50,9 +51,11 @@ function App() {
     setUser(nextUser);
     try {
       await saveUserProfile(nextUser);
+      return true;
     } catch (error) {
       // Keep the local change usable even when Firestore rules are not configured.
       setProfileError(`Profile changed on this device, but could not sync to the cloud: ${error.message}`);
+      return false;
     }
   }
 
@@ -85,6 +88,14 @@ function App() {
     setUser(null);
   }
 
+  async function saveProfileAndReturn() {
+    const saved = await saveUser(user);
+    if (saved) {
+      setProfileEditing(false);
+      setProfilePage(false);
+    }
+  }
+
   if (authLoading) return <main className="auth-page"><section className="auth-panel"><p className="eyebrow">AUXILIUM</p><h1>Checking your session…</h1></section></main>;
 
   if (!user) {
@@ -114,6 +125,18 @@ function App() {
         <h1>Your profile</h1>
         <p className="profile-page-intro">Keep your details up to date so your journey preferences and emergency information are ready when you need them.</p>
         {profileError && <p className="form-error" role="alert">{profileError}</p>}
+        {!profileEditing ? <>
+          <div className="profile-details-grid">
+            <div><span>Name</span><strong>{user.name || "Not added"}</strong></div>
+            <div><span>Email</span><strong>{user.email || "Not added"}</strong></div>
+            <div><span>Phone number</span><strong>{user.phoneNumber || "Not added"}</strong></div>
+            <div><span>Blood group</span><strong>{user.bloodGroup || "Not added"}</strong></div>
+            <div><span>Emergency contact</span><strong>{user.emergencyContactName || "Not added"}</strong></div>
+            <div><span>Emergency phone</span><strong>{user.emergencyContactPhone || "Not added"}</strong></div>
+            <div><span>Mobility profile</span><strong>{user.accessibilityProfile === "wheelchair" ? "Wheelchair" : user.accessibilityProfile === "walking_difficulty" ? "Walking support" : "General"}</strong></div>
+          </div>
+          <button className="primary-button profile-save" type="button" onClick={() => setProfileEditing(true)}>Edit profile</button>
+        </> : <>
         <div className="profile-form-grid">
           <label className="profile-field">Name<input value={user.name} onChange={(event) => setUser({ ...user, name: event.target.value })} /></label>
           <label className="profile-field">Email<input value={user.email} readOnly /></label>
@@ -129,7 +152,8 @@ function App() {
         <div className="preference-list profile-preferences" role="group" aria-label="Accessibility profile">
           {[['general', 'General'], ['wheelchair', 'Wheelchair'], ['walking_difficulty', 'Walking support']].map(([value, label]) => <button key={value} className={user.accessibilityProfile === value ? "preference active" : "preference"} type="button" onClick={() => setUser({ ...user, accessibilityProfile: value })}>{label}</button>)}
         </div>
-        <button className="primary-button profile-save" type="button" onClick={() => saveUser(user)}>Save profile</button>
+        <div className="profile-actions"><button className="primary-button profile-save" type="button" onClick={saveProfileAndReturn}>Save profile</button><button className="text-button" type="button" onClick={() => setProfileEditing(false)}>Cancel</button></div>
+        </>}
       </section>
     </main>;
   }

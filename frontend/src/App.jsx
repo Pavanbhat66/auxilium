@@ -4,17 +4,12 @@ import { calculateRouteScore } from "./utils/accessibility";
 import { firebaseConfigured } from "./lib/firebase";
 import { createAppUser, loadUserProfile, logOut, observeSession, saveUserProfile, signInWithGoogle } from "./services/auth";
 
-function profileLabel(profile) {
-  if (profile === "wheelchair") return "Wheelchair";
-  if (profile === "walking_difficulty") return "Walking support";
-  return "General";
-}
-
 function App() {
   const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [authError, setAuthError] = useState("");
-  const [profileOpen, setProfileOpen] = useState(false);
+  const [profilePage, setProfilePage] = useState(false);
+  const [profileEditing, setProfileEditing] = useState(false);
   const [routeDetails, setRouteDetails] = useState(null);
   const [profileError, setProfileError] = useState("");
   const [mobileControlsOpen, setMobileControlsOpen] = useState(false);
@@ -56,9 +51,11 @@ function App() {
     setUser(nextUser);
     try {
       await saveUserProfile(nextUser);
+      return true;
     } catch (error) {
       // Keep the local change usable even when Firestore rules are not configured.
       setProfileError(`Profile changed on this device, but could not sync to the cloud: ${error.message}`);
+      return false;
     }
   }
 
@@ -87,8 +84,17 @@ function App() {
 
   async function handleSignOut() {
     await logOut();
-    setProfileOpen(false);
+    setProfilePage(false);
     setUser(null);
+  }
+
+  async function saveProfileAndReturn() {
+    const saved = await saveUser(user);
+    if (saved) {
+      window.alert("Profile saved successfully.");
+      setProfileEditing(false);
+      setProfilePage(false);
+    }
   }
 
   if (authLoading) return <main className="auth-page"><section className="auth-panel"><p className="eyebrow">AUXILIUM</p><h1>Checking your session…</h1></section></main>;
@@ -108,12 +114,57 @@ function App() {
     </main>;
   }
 
+  if (profilePage) {
+    return <main className="profile-page">
+      <header className="profile-page-header">
+        <button className="text-button" type="button" onClick={() => setProfilePage(false)}>← Back to map</button>
+        <div className="brand"><span>AUXILIUM</span><small>Your profile</small></div>
+        <button className="secondary-button profile-logout" type="button" onClick={handleSignOut}>Log out</button>
+      </header>
+      <section className="profile-page-content">
+        <p className="eyebrow">Personal details</p>
+        <h1>Your profile</h1>
+        <p className="profile-page-intro">Keep your details up to date so your journey preferences and emergency information are ready when you need them.</p>
+        {profileError && <p className="form-error" role="alert">{profileError}</p>}
+        {!profileEditing ? <>
+          <div className="profile-details-grid">
+            <div><span>Name</span><strong>{user.name || "Not added"}</strong></div>
+            <div><span>Email</span><strong>{user.email || "Not added"}</strong></div>
+            <div><span>Phone number</span><strong>{user.phoneNumber || "Not added"}</strong></div>
+            <div><span>Blood group</span><strong>{user.bloodGroup || "Not added"}</strong></div>
+            <div><span>Emergency contact</span><strong>{user.emergencyContactName || "Not added"}</strong></div>
+            <div><span>Emergency phone</span><strong>{user.emergencyContactPhone || "Not added"}</strong></div>
+            <div><span>Mobility profile</span><strong>{user.accessibilityProfile === "wheelchair" ? "Wheelchair" : user.accessibilityProfile === "walking_difficulty" ? "Walking support" : "General"}</strong></div>
+          </div>
+          <button className="primary-button profile-save" type="button" onClick={() => setProfileEditing(true)}>Edit profile</button>
+        </> : <>
+        <div className="profile-form-grid">
+          <label className="profile-field">Name<input value={user.name} onChange={(event) => setUser({ ...user, name: event.target.value })} /></label>
+          <label className="profile-field">Email<input value={user.email} readOnly /></label>
+          <label className="profile-field">Phone number<input type="tel" value={user.phoneNumber} onChange={(event) => setUser({ ...user, phoneNumber: event.target.value })} placeholder="Add a phone number" /></label>
+          <label className="profile-field">Blood group<select value={user.bloodGroup} onChange={(event) => setUser({ ...user, bloodGroup: event.target.value })}><option value="">Select blood group</option>{["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map((group) => <option key={group} value={group}>{group}</option>)}</select></label>
+        </div>
+        <div className="profile-section-heading"><p className="eyebrow">Safety information</p><h2>Emergency contact</h2></div>
+        <div className="profile-form-grid">
+          <label className="profile-field">Contact name<input value={user.emergencyContactName} onChange={(event) => setUser({ ...user, emergencyContactName: event.target.value })} placeholder="Add an emergency contact" /></label>
+          <label className="profile-field">Contact phone<input type="tel" value={user.emergencyContactPhone} onChange={(event) => setUser({ ...user, emergencyContactPhone: event.target.value })} placeholder="Add their phone number" /></label>
+        </div>
+        <div className="profile-section-heading"><p className="eyebrow">Mobility preferences</p><h2>How should we plan routes?</h2></div>
+        <div className="preference-list profile-preferences" role="group" aria-label="Accessibility profile">
+          {[['general', 'General'], ['wheelchair', 'Wheelchair'], ['walking_difficulty', 'Walking support']].map(([value, label]) => <button key={value} className={user.accessibilityProfile === value ? "preference active" : "preference"} type="button" onClick={() => setUser({ ...user, accessibilityProfile: value })}>{label}</button>)}
+        </div>
+        <div className="profile-actions"><button className="primary-button profile-save" type="button" onClick={saveProfileAndReturn}>Save profile</button><button className="text-button" type="button" onClick={() => setProfileEditing(false)}>Cancel</button></div>
+        </>}
+      </section>
+    </main>;
+  }
+
   return <main className="map-page">
     <MapView profile={user.accessibilityProfile} onRouteChange={setRouteDetails} />
     <header className="top-bar">
       <div className="brand"><span>AUXILIUM</span><small>Accessible routing</small></div>
       <div className="map-search" aria-label="Route instructions">Select a start point, then select a destination on the map.</div>
-      <button className="account-button" type="button" onClick={() => setProfileOpen(true)}>{user.name}</button>
+      <button className="account-button" type="button" onClick={() => setProfilePage(true)}>{user.name}</button>
     </header>
     <section className="route-panel" aria-label="Route settings">
       <p className="eyebrow">Route preferences</p><h1>Plan your way</h1>
@@ -149,25 +200,6 @@ function App() {
       </section>}
       <button className="mobile-control-toggle" type="button" onClick={() => setMobileControlsOpen((open) => !open)} aria-expanded={mobileControlsOpen}>{mobileControlsOpen ? "Close controls" : "Control center"}</button>
     </div>
-    {profileOpen && <div className="dialog-backdrop" role="presentation" onMouseDown={() => setProfileOpen(false)}>
-      <section className="profile-dialog" role="dialog" aria-modal="true" aria-labelledby="profile-title" onMouseDown={(event) => event.stopPropagation()}>
-        <div className="dialog-heading"><div><p className="eyebrow">Your account</p><h2 id="profile-title">Profile</h2></div><button className="text-button" type="button" onClick={() => setProfileOpen(false)}>Close</button></div>
-        <label className="profile-field">Name<input value={user.name} onChange={(event) => setUser({ ...user, name: event.target.value })} /></label>
-        <label className="profile-field">Email<input value={user.email} readOnly /></label>
-        <div className="profile-current"><span>Current mobility profile</span><strong>{profileLabel(user.accessibilityProfile)}</strong></div>
-        <div className="profile-field">
-          <span>Change mobility profile</span>
-          <div className="mobile-preference-list" role="group" aria-label="Change accessibility profile">
-            {[['general', 'General'], ['wheelchair', 'Wheelchair'], ['walking_difficulty', 'Walking support']].map(([value, label]) =>
-              <button key={value} className={user.accessibilityProfile === value ? "preference active" : "preference"} type="button" onClick={() => saveUser({ ...user, accessibilityProfile: value })}>{label}</button>,
-            )}
-          </div>
-        </div>
-        {profileError && <p className="form-error" role="alert">{profileError}</p>}
-        <button className="primary-button" type="button" onClick={() => { saveUser(user); setProfileOpen(false); }}>Save profile</button>
-        <button className="secondary-button" type="button" onClick={handleSignOut}>Log out</button>
-      </section>
-    </div>}
   </main>;
 }
 

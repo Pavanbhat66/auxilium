@@ -29,6 +29,10 @@ export function createAppUser(firebaseUser, profile = {}) {
     name: profile.name || firebaseUser.displayName || "Google user",
     email: profile.email || firebaseUser.email || "",
     accessibilityProfile: profile.accessibilityProfile || "general",
+    phoneNumber: profile.phoneNumber || "",
+    emergencyContactName: profile.emergencyContactName || "",
+    emergencyContactPhone: profile.emergencyContactPhone || "",
+    bloodGroup: profile.bloodGroup || "",
   };
 }
 
@@ -42,6 +46,10 @@ export async function loadUserProfile(firebaseUser) {
       name: profile.name,
       email: profile.email,
       accessibilityProfile: profile.accessibilityProfile,
+      phoneNumber: profile.phoneNumber,
+      emergencyContactName: profile.emergencyContactName,
+      emergencyContactPhone: profile.emergencyContactPhone,
+      bloodGroup: profile.bloodGroup,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
     }, { merge: true });
@@ -60,6 +68,10 @@ export async function saveUserProfile(user) {
     name: user.name,
     email: user.email,
     accessibilityProfile: user.accessibilityProfile,
+    phoneNumber: user.phoneNumber || "",
+    emergencyContactName: user.emergencyContactName || "",
+    emergencyContactPhone: user.emergencyContactPhone || "",
+    bloodGroup: user.bloodGroup || "",
     updatedAt: serverTimestamp(),
   }, { merge: true });
   if (auth.currentUser && auth.currentUser.displayName !== user.name) {

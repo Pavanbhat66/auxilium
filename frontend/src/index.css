@@ -103,7 +103,11 @@ select:focus { border-color: #2351d8; box-shadow: 0 0 0 3px #e7edff; }
 
 @media (max-width: 760px) {
   .auth-page { display: block; } .auth-panel { width: min(100% - 40px, 440px); } .auth-aside { display: none; }
-  .top-bar { top: 12px; left: 12px; right: 12px; grid-template-columns: 1fr auto; } .map-search { grid-column: 1 / -1; grid-row: 2; font-size: 12px; }
+  .top-bar { top: 12px; left: 12px; right: 12px; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+  .brand { min-width: 0; padding: 10px 13px 9px; }
+  .brand span { font-size: 14px; }
+  .account-button { max-width: 44vw; min-height: 44px; overflow: hidden; padding: 0 13px; text-overflow: ellipsis; }
+  .map-search { grid-column: 1 / -1; grid-row: 2; min-height: 0; padding: 10px 14px; border-radius: 8px; font-size: 12px; line-height: 1.35; }
   .location-controls { top: 108px; right: 12px; max-width: 190px; }
   .location-button { min-height: 40px; padding: 0 11px; font-size: 12px; }
   .route-options { right: 12px; bottom: 75px; width: min(220px, calc(100vw - 24px)); max-height: 28vh; }

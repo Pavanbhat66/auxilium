@@ -91,6 +91,7 @@ function App() {
   async function saveProfileAndReturn() {
     const saved = await saveUser(user);
     if (saved) {
+      window.alert("Profile saved successfully.");
       setProfileEditing(false);
       setProfilePage(false);
     }

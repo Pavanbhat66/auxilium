@@ -7,27 +7,24 @@ function LocationSelector({ onLocationPick }) {
   return null;
 }
 
-function LocationTracker({ enabled, onLocation, onError }) {
-  const map = useMap();
-
-  useEffect(() => {
-    if (!enabled) return undefined;
-    const handleFound = (event) => onLocation({ point: [event.latlng.lat, event.latlng.lng], accuracy: event.accuracy });
-    const handleError = (event) => onError(event.message || "Your location could not be determined.");
-    map.on("locationfound", handleFound);
-    map.on("locationerror", handleError);
-    map.locate({ watch: true, enableHighAccuracy: true, setView: true, maxZoom: 18, timeout: 15000, maximumAge: 5000 });
-    return () => {
-      map.stopLocate();
-      map.off("locationfound", handleFound);
-      map.off("locationerror", handleError);
-    };
-  }, [enabled, map, onError, onLocation]);
-
-  return null;
+function distanceMeters([latA, lonA], [latB, lonB]) {
+  const earthRadius = 6371000;
+  const latitudeDelta = (latB - latA) * Math.PI / 180;
+  const longitudeDelta = (lonB - lonA) * Math.PI / 180;
+  const a = Math.sin(latitudeDelta / 2) ** 2
+    + Math.cos(latA * Math.PI / 180) * Math.cos(latB * Math.PI / 180) * Math.sin(longitudeDelta / 2) ** 2;
+  return earthRadius * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-function MapView({ onRouteChange }) {
+function evidenceNearRoute(routeCoordinates, evidence) {
+  const nearby = evidence.filter((feature) => {
+    const [longitude, latitude] = feature.geometry.coordinates;
+    return routeCoordinates.some((point) => distanceMeters(point, [latitude, longitude]) <= 50);
+  });
+  return [...new Map(nearby.map((feature) => [feature.properties.evidence_type, feature])).values()];
+}
+
+function MapView({ profile, onRouteChange }) {
   const [start, setStart] = useState(null);
   const [destination, setDestination] = useState(null);
   const [routes, setRoutes] = useState([]);
@@ -58,32 +55,28 @@ function MapView({ onRouteChange }) {
     try {
       const response = await fetch(`https://router.project-osrm.org/route/v1/foot/${coordinates}?alternatives=3&overview=full&geometries=geojson`, { signal });
       const data = await response.json();
-      if (!response.ok || data.code !== "Ok" || !data.routes?.length) {
-        setRoutes([]);
-        onRouteChange(null);
-        return;
-      }
-      const routeOptions = data.routes.map((routeData) => ({
-        points: routeData.geometry.coordinates.map(([lon, lat]) => [lat, lon]),
+      if (data.code !== "Ok" || !data.routes?.length) return;
+      const routeData = data.routes[0];
+      const routeCoordinates = routeData.geometry.coordinates.map(([lon, lat]) => [lat, lon]);
+      const nearbyEvidence = evidenceNearRoute(routeCoordinates, mapillaryEvidence);
+      const actionableEvidence = nearbyEvidence.filter((feature) => {
+        const properties = feature.properties || {};
+        return properties.source !== "gemini_ai" || properties.predicted_value !== "unknown";
+      });
+      const warnings = profile === "general" ? [] : actionableEvidence.map((feature) => `Potential ${feature.properties.evidence_type} near this route`);
+      const penalty = profile === "wheelchair" ? 20 : 10;
+      setRoute(routeCoordinates);
+      onRouteChange({
         distance: routeData.distance,
         duration: routeData.duration,
-      }));
-      setRoutes(routeOptions);
-      setSelectedRouteIndex(0);
-      onRouteChange({ distance: routeOptions[0].distance, duration: routeOptions[0].duration });
-    } catch (error) {
-      if (error.name === "AbortError") return;
-      setRoutes([]);
+        accessibilityScore: Math.max(0, 100 - warnings.length * penalty),
+        warnings,
+      });
+    } catch {
+      setRoute(null);
       onRouteChange(null);
     }
-  }, [onRouteChange]);
-
-  useEffect(() => {
-    if (!start || !destination) return undefined;
-    const controller = new AbortController();
-    fetchRoute(start, destination, controller.signal);
-    return () => controller.abort();
-  }, [destination, fetchRoute, start]);
+  }, [mapillaryEvidence, onRouteChange, profile]);
 
   function handleLocationPick(location) {
     if (!start || destination) {

@@ -55,6 +55,7 @@ input:focus { border-color: #2351d8; box-shadow: 0 0 0 3px #e7edff; }
 .route-summary strong { display: block; color: #172033; font-size: 38px; letter-spacing: -.06em; line-height: 1; margin-top: 5px; }
 .route-summary strong small { color: #8b94a5; font-size: 16px; letter-spacing: 0; }
 .route-summary p { color: #657085; font-size: 13px; margin: 8px 0 0; }
+.route-summary .route-warning { color: #a15b00; font-size: 12px; line-height: 1.35; }
 .map-hint { position: absolute; bottom: 25px; left: 50%; z-index: 500; padding: 12px 17px; border-radius: 8px; transform: translateX(-50%); color: #465268; font-size: 13px; }
 .mobile-controls { display: none; }
 .dialog-backdrop { position: absolute; z-index: 1000; inset: 0; display: grid; place-items: center; padding: 20px; background: rgba(18, 29, 52, .3); }

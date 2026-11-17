@@ -19,6 +19,23 @@ function LocationSelector({ onLocationPick }) {
   return null;
 }
 
+function distanceMeters([latA, lonA], [latB, lonB]) {
+  const earthRadius = 6371000;
+  const latitudeDelta = (latB - latA) * Math.PI / 180;
+  const longitudeDelta = (lonB - lonA) * Math.PI / 180;
+  const a = Math.sin(latitudeDelta / 2) ** 2
+    + Math.cos(latA * Math.PI / 180) * Math.cos(latB * Math.PI / 180) * Math.sin(longitudeDelta / 2) ** 2;
+  return earthRadius * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function evidenceNearRoute(routeCoordinates, evidence) {
+  const nearby = evidence.filter((feature) => {
+    const [longitude, latitude] = feature.geometry.coordinates;
+    return routeCoordinates.some((point) => distanceMeters(point, [latitude, longitude]) <= 50);
+  });
+  return [...new Map(nearby.map((feature) => [feature.properties.evidence_type, feature])).values()];
+}
+
 function MapView({ profile, onRouteChange }) {
   const [start, setStart] = useState(null);
   const [destination, setDestination] = useState(null);
@@ -40,13 +57,26 @@ function MapView({ profile, onRouteChange }) {
       const data = await response.json();
       if (data.code !== "Ok" || !data.routes?.length) return;
       const routeData = data.routes[0];
-      setRoute(routeData.geometry.coordinates.map(([lon, lat]) => [lat, lon]));
-      onRouteChange({ distance: routeData.distance, duration: routeData.duration });
+      const routeCoordinates = routeData.geometry.coordinates.map(([lon, lat]) => [lat, lon]);
+      const nearbyEvidence = evidenceNearRoute(routeCoordinates, mapillaryEvidence);
+      const actionableEvidence = nearbyEvidence.filter((feature) => {
+        const properties = feature.properties || {};
+        return properties.source !== "gemini_ai" || properties.predicted_value !== "unknown";
+      });
+      const warnings = profile === "general" ? [] : actionableEvidence.map((feature) => `Potential ${feature.properties.evidence_type} near this route`);
+      const penalty = profile === "wheelchair" ? 20 : 10;
+      setRoute(routeCoordinates);
+      onRouteChange({
+        distance: routeData.distance,
+        duration: routeData.duration,
+        accessibilityScore: Math.max(0, 100 - warnings.length * penalty),
+        warnings,
+      });
     } catch {
       setRoute(null);
       onRouteChange(null);
     }
-  }, [onRouteChange, profile]);
+  }, [mapillaryEvidence, onRouteChange, profile]);
 
   useEffect(() => { if (start && destination) fetchRoute(start, destination); }, [destination, fetchRoute, start]);
   function handleLocationPick(location) {

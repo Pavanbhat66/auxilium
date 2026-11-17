@@ -1,6 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import MapView from "./components/MapView";
-import { calculateRouteScore } from "./utils/accessibility";
 import { firebaseConfigured } from "./lib/firebase";
 import { createAppUser, loadUserProfile, logOut, observeSession, saveUserProfile, signInWithGoogle } from "./services/auth";
 
@@ -43,12 +42,7 @@ function App() {
       setAuthLoading(false);
     });
   }, []);
-  const routeSegments = useMemo(() => [
-    { stairs: false, slope: "low", ramp: true, surface: "good", obstacles: false },
-    { stairs: false, slope: "low", ramp: true, surface: "good", obstacles: false },
-    { stairs: false, slope: "low", ramp: true, surface: "good", obstacles: false },
-  ], []);
-  const score = calculateRouteScore(user?.accessibilityProfile || "general", routeSegments);
+  const score = routeDetails?.accessibilityScore ?? 0;
 
   async function saveUser(nextUser) {
     try {
@@ -120,7 +114,7 @@ function App() {
           <button key={value} className={user.accessibilityProfile === value ? "preference active" : "preference"} type="button" onClick={() => saveUser({ ...user, accessibilityProfile: value })}>{label}</button>,
         )}
       </div>
-      <div className="route-summary"><span>Accessibility score</span><strong>{score}<small>/100</small></strong>{routeDetails ? <p>{(routeDetails.distance / 1000).toFixed(2)} km · {Math.round(routeDetails.duration / 60)} min</p> : <p>Choose two points to see a route.</p>}</div>
+      <div className="route-summary"><span>Accessibility score</span><strong>{score}<small>/100</small></strong>{routeDetails ? <><p>{(routeDetails.distance / 1000).toFixed(2)} km · {Math.round(routeDetails.duration / 60)} min</p>{routeDetails.warnings?.map((warning) => <p className="route-warning" key={warning}>{warning}</p>)}</> : <p>Choose two points to see a route.</p>}</div>
     </section>
     <div className="map-hint">Click once for your start. Click again for your destination.</div>
     <div className="mobile-controls">
@@ -140,7 +134,7 @@ function App() {
           <p className="sheet-copy">Your profile adjusts how the prototype requests the route.</p>
         </div> : <div className="mobile-tab-content route-tab-content">
           <span>Accessibility score</span><strong>{score}<small>/100</small></strong>
-          {routeDetails ? <p>{(routeDetails.distance / 1000).toFixed(2)} km · {Math.round(routeDetails.duration / 60)} min</p> : <p>Choose two points on the map to see route details.</p>}
+          {routeDetails ? <><p>{(routeDetails.distance / 1000).toFixed(2)} km · {Math.round(routeDetails.duration / 60)} min</p>{routeDetails.warnings?.map((warning) => <p className="route-warning" key={warning}>{warning}</p>)}</> : <p>Choose two points on the map to see route details.</p>}
         </div>}
       </section>}
       <button className="mobile-control-toggle" type="button" onClick={() => setMobileControlsOpen((open) => !open)} aria-expanded={mobileControlsOpen}>{mobileControlsOpen ? "Close controls" : "Control center"}</button>

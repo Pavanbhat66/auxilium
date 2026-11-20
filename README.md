@@ -1,5 +1,37 @@
 ## Mapillary accessibility evidence
 
+## Accessibility-aware routing backend
+
+The routing engine is in `backend/`. It builds a pedestrian graph from the OSM
+GeoJSON export, applies mobility-profile costs, returns up to three alternatives,
+and keeps unverified Gemini/Mapillary findings as warnings rather than confirmed
+barriers.
+
+Start it from the repository root:
+
+```bash
+python -m backend.server
+```
+
+Then start the frontend in another terminal:
+
+```bash
+cd frontend
+npm run dev
+```
+
+The frontend calls `POST /api/routes` through the Vite proxy. The API also
+provides `GET /api/health`. Replace `data-pipeline/output/pedestrian_paths.geojson`
+with Member 1's expanded export without changing the API contract.
+
+Run routing tests with:
+
+```bash
+python -m unittest discover -s backend/tests -v
+```
+
+`firestore.rules` restricts each user document to its authenticated owner.
+
 The Mangalore ingestion pipeline reads `MAPILLARY_ACCESS_TOKEN`, fetches imagery and detections within the configured city bounding box, and writes evidence points to `data-pipeline/output/mangalore_mapillary_accessibility.geojson`.
 
 ```powershell

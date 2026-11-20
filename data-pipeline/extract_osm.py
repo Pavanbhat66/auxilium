@@ -13,6 +13,8 @@ import requests
 OUTPUT_DIR = Path(__file__).resolve().parent / "output"
 OUTPUT_FILE = OUTPUT_DIR / "pedestrian_paths.geojson"
 DEFAULT_OVERPASS_URL = "https://overpass.kumi.systems/api/interpreter"
+DEFAULT_GEOFABRIK_URL = "https://download.geofabrik.de/asia/india/southern-zone-latest.osm.pbf"
+DEFAULT_PBF_FILE = Path(__file__).resolve().parent / "cache" / "southern-zone-latest.osm.pbf"
 USER_AGENT = "AUXILIUM-AccessibilityResearch/1.0 (student project)"
 
 # Same coverage as ingest_mapillary.py: west, south, east, north.
@@ -108,6 +110,69 @@ def element_to_feature(element):
     }
 
 
+def download_pbf(url, destination):
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    with requests.Session() as session:
+        head = session.head(url, headers={"User-Agent": USER_AGENT}, allow_redirects=True, timeout=(20, 30))
+        head.raise_for_status()
+        expected_size = int(head.headers.get("Content-Length", "0"))
+        if destination.exists() and (not expected_size or destination.stat().st_size == expected_size):
+            print(f"Using cached Geofabrik PBF: {destination.resolve()} ({destination.stat().st_size} bytes)")
+            return destination.stat().st_size
+
+        partial = destination.with_suffix(destination.suffix + ".part")
+        with session.get(url, headers={"User-Agent": USER_AGENT}, stream=True, timeout=(20, 300)) as response:
+            response.raise_for_status()
+            with partial.open("wb") as output:
+                for chunk in response.iter_content(chunk_size=1024 * 1024):
+                    if chunk:
+                        output.write(chunk)
+        actual_size = partial.stat().st_size
+        if expected_size and actual_size != expected_size:
+            partial.unlink(missing_ok=True)
+            raise RuntimeError(f"PBF size mismatch: expected {expected_size}, received {actual_size}")
+        partial.replace(destination)
+        print(f"Downloaded Geofabrik PBF: {destination.resolve()} ({actual_size} bytes)")
+        return actual_size
+
+
+def extract_geofabrik(bbox, pbf_url, pbf_file):
+    try:
+        import osmium
+    except ImportError as error:
+        raise RuntimeError("The osmium package is required for Geofabrik PBF extraction.") from error
+
+    pbf_size = download_pbf(pbf_url, pbf_file)
+    west, south, east, north = bbox
+    elements_by_id = {}
+
+    class PedestrianWayHandler(osmium.SimpleHandler):
+        def way(self, way):
+            tags = dict(way.tags)
+            if "sidewalk" not in tags and tags.get("highway") not in set(HIGHWAY_VALUES.split("|")):
+                return
+            coordinates = []
+            for node in way.nodes:
+                if not node.location.valid():
+                    return
+                coordinates.append([node.location.lon, node.location.lat])
+            if len(coordinates) < 2 or not any(
+                west <= coordinate[0] <= east and south <= coordinate[1] <= north
+                for coordinate in coordinates
+            ):
+                return
+            elements_by_id[way.id] = {"type": "way", "id": way.id, "tags": tags, "geometry": [
+                {"lon": coordinate[0], "lat": coordinate[1]} for coordinate in coordinates
+            ]}
+
+    handler = PedestrianWayHandler()
+    handler.apply_file(str(pbf_file), locations=True)
+    features = [element_to_feature(element) for element in elements_by_id.values()]
+    features = [feature for feature in features if feature]
+    features.sort(key=lambda feature: feature["id"])
+    return features, pbf_size
+
+
 def backup_output():
     if not OUTPUT_FILE.exists():
         return None
@@ -123,38 +188,41 @@ def main():
     parser.add_argument("--tile-size", type=float, default=DEFAULT_TILE_SIZE, help="Tile size in degrees.")
     parser.add_argument("--delay", type=float, default=REQUEST_DELAY_SECONDS, help="Delay between Overpass requests.")
     parser.add_argument("--overpass-url", default=DEFAULT_OVERPASS_URL, help="Overpass API interpreter URL.")
+    parser.add_argument("--source", choices=("overpass", "geofabrik"), default="overpass")
+    parser.add_argument("--pbf-url", default=DEFAULT_GEOFABRIK_URL, help="Geofabrik PBF URL.")
+    parser.add_argument("--pbf-file", type=Path, default=DEFAULT_PBF_FILE, help="Local PBF cache path.")
     args = parser.parse_args()
     if args.tile_size <= 0:
         raise SystemExit("--tile-size must be greater than zero.")
     if args.delay < 0:
         raise SystemExit("--delay cannot be negative.")
 
-    tiles = list(bbox_tiles(args.bbox, args.tile_size))
     print(f"Extracting OSM pedestrian ways for bbox: {args.bbox}")
-    print(f"Tiles to process: {len(tiles)}")
-
-    elements_by_id = {}
     failures = []
-    with requests.Session() as session:
-        for index, tile in enumerate(tiles, start=1):
-            try:
-                elements = fetch_tile(tile, session, args.overpass_url)
-                for element in elements:
-                    if element.get("type") == "way":
-                        elements_by_id[element["id"]] = element
-                print(f"Tile {index}/{len(tiles)}: {len(elements)} elements, {len(elements_by_id)} unique ways")
-            except (requests.RequestException, ValueError) as error:
-                failures.append({"tile": tile, "error": str(error)})
-                print(f"Tile {index}/{len(tiles)} failed: {error}")
-            if index < len(tiles):
-                time.sleep(args.delay)
-
-    features = []
-    for element in elements_by_id.values():
-        feature = element_to_feature(element)
-        if feature:
-            features.append(feature)
-    features.sort(key=lambda feature: feature["id"])
+    pbf_size = None
+    tiles = []
+    if args.source == "geofabrik":
+        features, pbf_size = extract_geofabrik(args.bbox, args.pbf_url, args.pbf_file)
+    else:
+        tiles = list(bbox_tiles(args.bbox, args.tile_size))
+        print(f"Tiles to process: {len(tiles)}")
+        elements_by_id = {}
+        with requests.Session() as session:
+            for index, tile in enumerate(tiles, start=1):
+                try:
+                    elements = fetch_tile(tile, session, args.overpass_url)
+                    for element in elements:
+                        if element.get("type") == "way":
+                            elements_by_id[element["id"]] = element
+                    print(f"Tile {index}/{len(tiles)}: {len(elements)} elements, {len(elements_by_id)} unique ways")
+                except (requests.RequestException, ValueError) as error:
+                    failures.append({"tile": tile, "error": str(error)})
+                    print(f"Tile {index}/{len(tiles)} failed: {error}")
+                if index < len(tiles):
+                    time.sleep(args.delay)
+        features = [element_to_feature(element) for element in elements_by_id.values()]
+        features = [feature for feature in features if feature]
+        features.sort(key=lambda feature: feature["id"])
 
     backup = backup_output()
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -164,6 +232,9 @@ def main():
         "metadata": {
             "source": "openstreetmap",
             "bbox": list(args.bbox),
+            "extractor": args.source,
+            "pbf_url": args.pbf_url if args.source == "geofabrik" else None,
+            "pbf_size_bytes": pbf_size,
             "tile_size_degrees": args.tile_size,
             "tiles_processed": len(tiles),
             "tiles_failed": len(failures),

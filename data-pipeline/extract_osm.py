@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 import shutil
 import time
+import xml.etree.ElementTree as ET
 
 import requests
 
@@ -15,6 +16,7 @@ OUTPUT_FILE = OUTPUT_DIR / "pedestrian_paths.geojson"
 DEFAULT_OVERPASS_URL = "https://overpass.kumi.systems/api/interpreter"
 DEFAULT_GEOFABRIK_URL = "https://download.geofabrik.de/asia/india/southern-zone-latest.osm.pbf"
 DEFAULT_PBF_FILE = Path(__file__).resolve().parent / "cache" / "southern-zone-latest.osm.pbf"
+DEFAULT_OSM_API_URL = "https://api.openstreetmap.org/api/0.6/map"
 USER_AGENT = "AUXILIUM-AccessibilityResearch/1.0 (student project)"
 
 # Same coverage as ingest_mapillary.py: west, south, east, north.
@@ -75,6 +77,34 @@ def fetch_tile(tile, session, overpass_url):
     )
     response.raise_for_status()
     return response.json().get("elements", [])
+
+
+def fetch_osm_api_tile(tile, session, osm_api_url=DEFAULT_OSM_API_URL):
+    """Fetch one small bbox from the official OSM XML map endpoint."""
+    west, south, east, north = tile
+    response = session.get(
+        osm_api_url,
+        params={"bbox": f"{west},{south},{east},{north}"},
+        headers={"User-Agent": USER_AGENT, "Accept": "application/xml"},
+        timeout=(REQUEST_CONNECT_TIMEOUT_SECONDS, REQUEST_READ_TIMEOUT_SECONDS),
+    )
+    response.raise_for_status()
+    root = ET.fromstring(response.content)
+    nodes = {
+        node.attrib["id"]: {"lon": float(node.attrib["lon"]), "lat": float(node.attrib["lat"])}
+        for node in root.findall("node")
+        if "id" in node.attrib and "lon" in node.attrib and "lat" in node.attrib
+    }
+    elements = []
+    allowed = set(HIGHWAY_VALUES.split("|"))
+    for way in root.findall("way"):
+        tags = {tag.attrib["k"]: tag.attrib.get("v", "") for tag in way.findall("tag")}
+        if "sidewalk" not in tags and tags.get("highway") not in allowed:
+            continue
+        geometry = [nodes[ref.attrib["ref"]] for ref in way.findall("nd") if ref.attrib.get("ref") in nodes]
+        if len(geometry) >= 2:
+            elements.append({"type": "way", "id": int(way.attrib["id"]), "tags": tags, "geometry": geometry})
+    return elements
 
 
 def element_to_feature(element):
@@ -188,7 +218,8 @@ def main():
     parser.add_argument("--tile-size", type=float, default=DEFAULT_TILE_SIZE, help="Tile size in degrees.")
     parser.add_argument("--delay", type=float, default=REQUEST_DELAY_SECONDS, help="Delay between Overpass requests.")
     parser.add_argument("--overpass-url", default=DEFAULT_OVERPASS_URL, help="Overpass API interpreter URL.")
-    parser.add_argument("--source", choices=("overpass", "geofabrik"), default="overpass")
+    parser.add_argument("--source", choices=("overpass", "osm_api", "geofabrik"), default="overpass")
+    parser.add_argument("--osm-api-url", default=DEFAULT_OSM_API_URL, help="Official OSM map API URL for small fallback tiles.")
     parser.add_argument("--pbf-url", default=DEFAULT_GEOFABRIK_URL, help="Geofabrik PBF URL.")
     parser.add_argument("--pbf-file", type=Path, default=DEFAULT_PBF_FILE, help="Local PBF cache path.")
     args = parser.parse_args()
@@ -210,7 +241,7 @@ def main():
         with requests.Session() as session:
             for index, tile in enumerate(tiles, start=1):
                 try:
-                    elements = fetch_tile(tile, session, args.overpass_url)
+                    elements = fetch_osm_api_tile(tile, session, args.osm_api_url) if args.source == "osm_api" else fetch_tile(tile, session, args.overpass_url)
                     for element in elements:
                         if element.get("type") == "way":
                             elements_by_id[element["id"]] = element
@@ -234,6 +265,7 @@ def main():
             "bbox": list(args.bbox),
             "extractor": args.source,
             "pbf_url": args.pbf_url if args.source == "geofabrik" else None,
+            "osm_api_url": args.osm_api_url if args.source == "osm_api" else None,
             "pbf_size_bytes": pbf_size,
             "tile_size_degrees": args.tile_size,
             "tiles_processed": len(tiles),

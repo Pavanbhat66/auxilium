@@ -33,6 +33,7 @@ function MapView({ profile, onRouteChange }) {
   const [locationError, setLocationError] = useState("");
   const [routeError, setRouteError] = useState("");
   const [evidence, setEvidence] = useState([]);
+  const [osmPaths, setOsmPaths] = useState([]);
 
   useEffect(() => {
     let active = true;
@@ -50,6 +51,15 @@ function MapView({ profile, onRouteChange }) {
         setEvidence([...unique.values()]);
       })
       .catch(() => { if (active) setEvidence([]); });
+    return () => { active = false; };
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    fetch("/data/pedestrian_paths.geojson")
+      .then((response) => response.ok ? response.json() : null)
+      .then((data) => { if (active) setOsmPaths(data?.features || []); })
+      .catch(() => { if (active) setOsmPaths([]); });
     return () => { active = false; };
   }, []);
 
@@ -137,6 +147,11 @@ function MapView({ profile, onRouteChange }) {
         <Circle center={currentLocation.point} radius={currentLocation.accuracy} pathOptions={{ color: "#2351d8", fillColor: "#2351d8", fillOpacity: 0.12, weight: 1 }} />
         <CircleMarker center={currentLocation.point} radius={8} pathOptions={{ color: "#fff", weight: 3, fillColor: "#2351d8", fillOpacity: 1 }}><Popup>Your live location</Popup></CircleMarker>
       </>}
+      {osmPaths.flatMap((feature) => {
+        const geometry = feature.geometry || {};
+        const lines = geometry.type === "LineString" ? [geometry.coordinates] : geometry.type === "MultiLineString" ? geometry.coordinates : [];
+        return lines.filter((line) => Array.isArray(line) && line.length > 1).map((line, index) => <Polyline key={`${feature.id || "osm"}-${index}`} positions={line.map(([lon, lat]) => [lat, lon])} pathOptions={{ color: "#7c8798", weight: 2, opacity: 0.35 }} />);
+      })}
       {evidence.map((feature) => {
         const [longitude, latitude] = feature.geometry.coordinates;
         const properties = feature.properties || {};

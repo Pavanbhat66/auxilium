@@ -1,21 +1,24 @@
 {
-  "generated_at": "2026-11-23T15:30:42.925978+00:00",
+  "generated_at": "2026-11-23T15:44:36.186254+00:00",
   "evidence_file": "/home/himamshus06/Desktop/aux/auxilium/data-pipeline/output/mangalore_mapillary_accessibility.geojson",
   "osm_file": "/home/himamshus06/Desktop/aux/auxilium/data-pipeline/output/pedestrian_paths.geojson",
   "threshold_m": 50.0,
   "total_accessibility_observations": 28,
-  "total_osm_paths_considered": 6,
-  "matched_within_10m": 0,
-  "matched_within_25m": 0,
-  "matched_within_50m": 0,
-  "matched_within_100m": 0,
-  "unmatched_observations": 28,
+  "total_osm_paths_considered": 230,
+  "matched_within_10m": 7,
+  "matched_within_25m": 7,
+  "matched_within_50m": 21,
+  "matched_within_100m": 28,
+  "unmatched_observations": 7,
   "distance_distribution_m": {
-    "min": 18177.031,
-    "max": 18241.885,
-    "mean": 18225.328
+    "min": 9.235,
+    "max": 50.657,
+    "mean": 35.168
   },
-  "observations_per_osm_path": {},
+  "observations_per_osm_path": {
+    "osm_way_1446852972": 14,
+    "osm_way_800386194": 7
+  },
   "observations": [
     {
       "evidence_id": "mapillary_detection_2899502876935017",
@@ -24,8 +27,8 @@
       "predicted_value": "construction--flat--driveway",
       "longitude": 74.813013130585,
       "latitude": 12.902830004871,
-      "nearest_path_id": "osm_way_1054632970",
-      "nearest_distance_m": 18241.885,
+      "nearest_path_id": "osm_way_1446852972",
+      "nearest_distance_m": 50.657,
       "matched_path_id": null
     },
     {
@@ -35,9 +38,9 @@
       "predicted_value": "construction--flat--driveway",
       "longitude": 74.813014600639,
       "latitude": 12.902776623178,
-      "nearest_path_id": "osm_way_1054632970",
-      "nearest_distance_m": 18241.54,
-      "matched_path_id": null
+      "nearest_path_id": "osm_way_1446852972",
+      "nearest_distance_m": 44.898,
+      "matched_path_id": "osm_way_1446852972"
     },
     {
       "evidence_id": "mapillary_detection_2870281449968138",
@@ -46,9 +49,9 @@
       "predicted_value": "construction--flat--driveway",
       "longitude": 74.813018879521,
       "latitude": 12.90267877029,
-      "nearest_path_id": "osm_way_1054632970",
-      "nearest_distance_m": 18240.741,
-      "matched_path_id": null
+      "nearest_path_id": "osm_way_1446852972",
+      "nearest_distance_m": 34.379,
+      "matched_path_id": "osm_way_1446852972"
     },
     {
       "evidence_id": "mapillary_ai_518599929314151_0",
@@ -57,9 +60,9 @@
       "predicted_value": "uneven",
       "longitude": 74.81355277629,
       "latitude": 12.900469622049,
-      "nearest_path_id": "osm_way_1054632970",
-      "nearest_distance_m": 18177.031,
-      "matched_path_id": null
+      "nearest_path_id": "osm_way_800386194",
+      "nearest_distance_m": 9.235,
+      "matched_path_id": "osm_way_800386194"
     },
     {
       "evidence_id": "mapillary_ai_518599929314151_1",
@@ -68,9 +71,9 @@
       "predicted_value": "unknown",
       "longitude": 74.81355277629,
       "latitude": 12.900469622049,
-      "nearest_path_id": "osm_way_1054632970",
-      "nearest_distance_m": 18177.031,
-      "matched_path_id": null
+      "nearest_path_id": "osm_way_800386194",
+      "nearest_distance_m": 9.235,
+      "matched_path_id": "osm_way_800386194"
     },
     {
       "evidence_id": "mapillary_ai_518599929314151_2",
@@ -79,9 +82,9 @@
       "predicted_value": "unknown",
       "longitude": 74.81355277629,
       "latitude": 12.900469622049,
-      "nearest_path_id": "osm_way_1054632970",
-      "nearest_distance_m": 18177.031,
-      "matched_path_id": null
+      "nearest_path_id": "osm_way_800386194",
+      "nearest_distance_m": 9.235,
+      "matched_path_id": "osm_way_800386194"
     },
     {
       "evidence_id": "mapillary_ai_518599929314151_3",
@@ -90,9 +93,9 @@
       "predicted_value": "unknown",
       "longitude": 74.81355277629,
       "latitude": 12.900469622049,
-      "nearest_path_id": "osm_way_1054632970",
-      "nearest_distance_m": 18177.031,
-      "matched_path_id": null
+      "nearest_path_id": "osm_way_800386194",
+      "nearest_distance_m": 9.235,
+      "matched_path_id": "osm_way_800386194"
     },
     {
       "evidence_id": "mapillary_ai_518599929314151_4",
@@ -101,9 +104,9 @@
       "predicted_value": "unknown",
       "longitude": 74.81355277629,
       "latitude": 12.900469622049,
-      "nearest_path_id": "osm_way_1054632970",
-      "nearest_distance_m": 18177.031,
-      "matched_path_id": null
+      "nearest_path_id": "osm_way_800386194",
+      "nearest_distance_m": 9.235,
+      "matched_path_id": "osm_way_800386194"
     },
     {
       "evidence_id": "mapillary_ai_518599929314151_5",
@@ -112,9 +115,9 @@
       "predicted_value": "unknown",
       "longitude": 74.81355277629,
       "latitude": 12.900469622049,
-      "nearest_path_id": "osm_way_1054632970",
-      "nearest_distance_m": 18177.031,
-      "matched_path_id": null
+      "nearest_path_id": "osm_way_800386194",
+      "nearest_distance_m": 9.235,
+      "matched_path_id": "osm_way_800386194"
     },
     {
       "evidence_id": "mapillary_ai_518599929314151_6",
@@ -123,9 +126,9 @@
       "predicted_value": "present",
       "longitude": 74.81355277629,
       "latitude": 12.900469622049,
-      "nearest_path_id": "osm_way_1054632970",
-      "nearest_distance_m": 18177.031,
-      "matched_path_id": null
+      "nearest_path_id": "osm_way_800386194",
+      "nearest_distance_m": 9.235,
+      "matched_path_id": "osm_way_800386194"
     },
     {
       "evidence_id": "mapillary_ai_2861634120832871_0",
@@ -134,9 +137,9 @@
       "predicted_value": "uneven",
       "longitude": 74.813018879521,
       "latitude": 12.90267877029,
-      "nearest_path_id": "osm_way_1054632970",
-      "nearest_distance_m": 18240.741,
-      "matched_path_id": null
+      "nearest_path_id": "osm_way_1446852972",
+      "nearest_distance_m": 34.379,
+      "matched_path_id": "osm_way_1446852972"
     },
     {
       "evidence_id": "mapillary_ai_2861634120832871_1",
@@ -145,9 +148,9 @@
       "predicted_value": "unknown",
       "longitude": 74.813018879521,
       "latitude": 12.90267877029,
-      "nearest_path_id": "osm_way_1054632970",
-      "nearest_distance_m": 18240.741,
-      "matched_path_id": null
+      "nearest_path_id": "osm_way_1446852972",
+      "nearest_distance_m": 34.379,
+      "matched_path_id": "osm_way_1446852972"
     },
     {
       "evidence_id": "mapillary_ai_2861634120832871_2",
@@ -156,9 +159,9 @@
       "predicted_value": "unknown",
       "longitude": 74.813018879521,
       "latitude": 12.90267877029,
-      "nearest_path_id": "osm_way_1054632970",
-      "nearest_distance_m": 18240.741,
-      "matched_path_id": null
+      "nearest_path_id": "osm_way_1446852972",
+      "nearest_distance_m": 34.379,
+      "matched_path_id": "osm_way_1446852972"
     },
     {
       "evidence_id": "mapillary_ai_2861634120832871_3",
@@ -167,9 +170,9 @@
       "predicted_value": "unknown",
       "longitude": 74.813018879521,
       "latitude": 12.90267877029,
-      "nearest_path_id": "osm_way_1054632970",
-      "nearest_distance_m": 18240.741,
-      "matched_path_id": null
+      "nearest_path_id": "osm_way_1446852972",
+      "nearest_distance_m": 34.379,
+      "matched_path_id": "osm_way_1446852972"
     },
     {
       "evidence_id": "mapillary_ai_2861634120832871_4",
@@ -178,9 +181,9 @@
       "predicted_value": "unknown",
       "longitude": 74.813018879521,
       "latitude": 12.90267877029,
-      "nearest_path_id": "osm_way_1054632970",
-      "nearest_distance_m": 18240.741,
-      "matched_path_id": null
+      "nearest_path_id": "osm_way_1446852972",
+      "nearest_distance_m": 34.379,
+      "matched_path_id": "osm_way_1446852972"
     },
     {
       "evidence_id": "mapillary_ai_197736268837290_0",
@@ -189,9 +192,9 @@
       "predicted_value": "unknown",
       "longitude": 74.813014600639,
       "latitude": 12.902776623178,
-      "nearest_path_id": "osm_way_1054632970",
-      "nearest_distance_m": 18241.54,
-      "matched_path_id": null
+      "nearest_path_id": "osm_way_1446852972",
+      "nearest_distance_m": 44.898,
+      "matched_path_id": "osm_way_1446852972"
     },
     {
       "evidence_id": "mapillary_ai_197736268837290_1",
@@ -200,9 +203,9 @@
       "predicted_value": "unknown",
       "longitude": 74.813014600639,
       "latitude": 12.902776623178,
-      "nearest_path_id": "osm_way_1054632970",
-      "nearest_distance_m": 18241.54,
-      "matched_path_id": null
+      "nearest_path_id": "osm_way_1446852972",
+      "nearest_distance_m": 44.898,
+      "matched_path_id": "osm_way_1446852972"
     },
     {
       "evidence_id": "mapillary_ai_197736268837290_2",
@@ -211,9 +214,9 @@
       "predicted_value": "unknown",
       "longitude": 74.813014600639,
       "latitude": 12.902776623178,
-      "nearest_path_id": "osm_way_1054632970",
-      "nearest_distance_m": 18241.54,
-      "matched_path_id": null
+      "nearest_path_id": "osm_way_1446852972",
+      "nearest_distance_m": 44.898,
+      "matched_path_id": "osm_way_1446852972"
     },
     {
       "evidence_id": "mapillary_ai_197736268837290_3",
@@ -222,9 +225,9 @@
       "predicted_value": "unknown",
       "longitude": 74.813014600639,
       "latitude": 12.902776623178,
-      "nearest_path_id": "osm_way_1054632970",
-      "nearest_distance_m": 18241.54,
-      "matched_path_id": null
+      "nearest_path_id": "osm_way_1446852972",
+      "nearest_distance_m": 44.898,
+      "matched_path_id": "osm_way_1446852972"
     },
     {
       "evidence_id": "mapillary_ai_197736268837290_4",
@@ -233,9 +236,9 @@
       "predicted_value": "unknown",
       "longitude": 74.813014600639,
       "latitude": 12.902776623178,
-      "nearest_path_id": "osm_way_1054632970",
-      "nearest_distance_m": 18241.54,
-      "matched_path_id": null
+      "nearest_path_id": "osm_way_1446852972",
+      "nearest_distance_m": 44.898,
+      "matched_path_id": "osm_way_1446852972"
     },
     {
       "evidence_id": "mapillary_ai_197736268837290_5",
@@ -244,9 +247,9 @@
       "predicted_value": "unknown",
       "longitude": 74.813014600639,
       "latitude": 12.902776623178,
-      "nearest_path_id": "osm_way_1054632970",
-      "nearest_distance_m": 18241.54,
-      "matched_path_id": null
+      "nearest_path_id": "osm_way_1446852972",
+      "nearest_distance_m": 44.898,
+      "matched_path_id": "osm_way_1446852972"
     },
     {
       "evidence_id": "mapillary_ai_197736268837290_6",
@@ -255,9 +258,9 @@
       "predicted_value": "smooth",
       "longitude": 74.813014600639,
       "latitude": 12.902776623178,
-      "nearest_path_id": "osm_way_1054632970",
-      "nearest_distance_m": 18241.54,
-      "matched_path_id": null
+      "nearest_path_id": "osm_way_1446852972",
+      "nearest_distance_m": 44.898,
+      "matched_path_id": "osm_way_1446852972"
     },
     {
       "evidence_id": "mapillary_ai_2890914187793886_0",
@@ -266,8 +269,8 @@
       "predicted_value": "uneven",
       "longitude": 74.813013130585,
       "latitude": 12.902830004871,
-      "nearest_path_id": "osm_way_1054632970",
-      "nearest_distance_m": 18241.885,
+      "nearest_path_id": "osm_way_1446852972",
+      "nearest_distance_m": 50.657,
       "matched_path_id": null
     },
     {
@@ -277,8 +280,8 @@
       "predicted_value": "unknown",
       "longitude": 74.813013130585,
       "latitude": 12.902830004871,
-      "nearest_path_id": "osm_way_1054632970",
-      "nearest_distance_m": 18241.885,
+      "nearest_path_id": "osm_way_1446852972",
+      "nearest_distance_m": 50.657,
       "matched_path_id": null
     },
     {
@@ -288,8 +291,8 @@
       "predicted_value": "unknown",
       "longitude": 74.813013130585,
       "latitude": 12.902830004871,
-      "nearest_path_id": "osm_way_1054632970",
-      "nearest_distance_m": 18241.885,
+      "nearest_path_id": "osm_way_1446852972",
+      "nearest_distance_m": 50.657,
       "matched_path_id": null
     },
     {
@@ -299,8 +302,8 @@
       "predicted_value": "unknown",
       "longitude": 74.813013130585,
       "latitude": 12.902830004871,
-      "nearest_path_id": "osm_way_1054632970",
-      "nearest_distance_m": 18241.885,
+      "nearest_path_id": "osm_way_1446852972",
+      "nearest_distance_m": 50.657,
       "matched_path_id": null
     },
     {
@@ -310,8 +313,8 @@
       "predicted_value": "unknown",
       "longitude": 74.813013130585,
       "latitude": 12.902830004871,
-      "nearest_path_id": "osm_way_1054632970",
-      "nearest_distance_m": 18241.885,
+      "nearest_path_id": "osm_way_1446852972",
+      "nearest_distance_m": 50.657,
       "matched_path_id": null
     },
     {
@@ -321,10 +324,10 @@
       "predicted_value": "unknown",
       "longitude": 74.813013130585,
       "latitude": 12.902830004871,
-      "nearest_path_id": "osm_way_1054632970",
-      "nearest_distance_m": 18241.885,
+      "nearest_path_id": "osm_way_1446852972",
+      "nearest_distance_m": 50.657,
       "matched_path_id": null
     }
   ],
-  "status": "provisional_until_expanded_osm_dataset_is_available"
+  "status": "provisional_until_full_city_osm_dataset_is_available"
 }

@@ -22,7 +22,9 @@
         "evidence_type": "construction",
         "raw_value": "construction--flat--driveway",
         "verification_status": "needs_review",
-        "accessibility_claim": "unknown"
+        "accessibility_claim": "unknown",
+        "path_id": null,
+        "matching_distance_m": 50.657
       }
     },
     {
@@ -46,7 +48,9 @@
         "evidence_type": "construction",
         "raw_value": "construction--flat--driveway",
         "verification_status": "needs_review",
-        "accessibility_claim": "unknown"
+        "accessibility_claim": "unknown",
+        "path_id": "osm_way_1446852972",
+        "matching_distance_m": 44.898
       }
     },
     {
@@ -70,7 +74,9 @@
         "evidence_type": "construction",
         "raw_value": "construction--flat--driveway",
         "verification_status": "needs_review",
-        "accessibility_claim": "unknown"
+        "accessibility_claim": "unknown",
+        "path_id": "osm_way_1446852972",
+        "matching_distance_m": 34.379
       }
     },
     {
@@ -89,7 +95,7 @@
         "mapillary_image_id": "518599929314151",
         "captured_at": 1541486471146,
         "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
-        "path_id": null,
+        "path_id": "osm_way_800386194",
         "feature_name": "surface",
         "predicted_value": "uneven",
         "evidence_type": "surface",
@@ -98,7 +104,8 @@
         "visual_explanation": "The road and roadside shoulder are composed of dirt, sand, and gravel with visible ruts, puddles, and uneven terrain.",
         "model": "gemini-3.5-flash-lite",
         "verification_status": "needs_review",
-        "accessibility_claim": "unknown"
+        "accessibility_claim": "unknown",
+        "matching_distance_m": 9.235
       }
     },
     {
@@ -117,7 +124,7 @@
         "mapillary_image_id": "518599929314151",
         "captured_at": 1541486471146,
         "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
-        "path_id": null,
+        "path_id": "osm_way_800386194",
         "feature_name": "stairs",
         "predicted_value": "unknown",
         "evidence_type": "stairs",
@@ -126,7 +133,8 @@
         "visual_explanation": "No stairs are visible within the image frame.",
         "model": "gemini-3.5-flash-lite",
         "verification_status": "needs_review",
-        "accessibility_claim": "unknown"
+        "accessibility_claim": "unknown",
+        "matching_distance_m": 9.235
       }
     },
     {
@@ -145,7 +153,7 @@
         "mapillary_image_id": "518599929314151",
         "captured_at": 1541486471146,
         "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
-        "path_id": null,
+        "path_id": "osm_way_800386194",
         "feature_name": "ramp",
         "predicted_value": "unknown",
         "evidence_type": "ramp",
@@ -154,7 +162,8 @@
         "visual_explanation": "No pedestrian ramps are visible.",
         "model": "gemini-3.5-flash-lite",
         "verification_status": "needs_review",
-        "accessibility_claim": "unknown"
+        "accessibility_claim": "unknown",
+        "matching_distance_m": 9.235
       }
     },
     {
@@ -173,7 +182,7 @@
         "mapillary_image_id": "518599929314151",
         "captured_at": 1541486471146,
         "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
-        "path_id": null,
+        "path_id": "osm_way_800386194",
         "feature_name": "curb",
         "predicted_value": "unknown",
         "evidence_type": "curb",
@@ -182,7 +191,8 @@
         "visual_explanation": "There are no standard raised curbs separating the road from the unpaved shoulder.",
         "model": "gemini-3.5-flash-lite",
         "verification_status": "needs_review",
-        "accessibility_claim": "unknown"
+        "accessibility_claim": "unknown",
+        "matching_distance_m": 9.235
       }
     },
     {
@@ -201,7 +211,7 @@
         "mapillary_image_id": "518599929314151",
         "captured_at": 1541486471146,
         "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
-        "path_id": null,
+        "path_id": "osm_way_800386194",
         "feature_name": "dropped_curb",
         "predicted_value": "unknown",
         "evidence_type": "dropped_curb",
@@ -210,7 +220,8 @@
         "visual_explanation": "No sidewalks or dropped curbs are present.",
         "model": "gemini-3.5-flash-lite",
         "verification_status": "needs_review",
-        "accessibility_claim": "unknown"
+        "accessibility_claim": "unknown",
+        "matching_distance_m": 9.235
       }
     },
     {
@@ -229,7 +240,7 @@
         "mapillary_image_id": "518599929314151",
         "captured_at": 1541486471146,
         "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
-        "path_id": null,
+        "path_id": "osm_way_800386194",
         "feature_name": "tactile_paving",
         "predicted_value": "unknown",
         "evidence_type": "tactile_paving",
@@ -238,7 +249,8 @@
         "visual_explanation": "No tactile paving tiles are visible in this rural or semi-urban road setting.",
         "model": "gemini-3.5-flash-lite",
         "verification_status": "needs_review",
-        "accessibility_claim": "unknown"
+        "accessibility_claim": "unknown",
+        "matching_distance_m": 9.235
       }
     },
     {
@@ -257,7 +269,7 @@
         "mapillary_image_id": "518599929314151",
         "captured_at": 1541486471146,
         "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
-        "path_id": null,
+        "path_id": "osm_way_800386194",
         "feature_name": "obstacle",
         "predicted_value": "present",
         "evidence_type": "obstacle",
@@ -266,7 +278,8 @@
         "visual_explanation": "Vehicles such as trucks and cars parked or operating along the side and road area, as well as uneven dirt paths, act as environmental elements affecting pedestrian pathways.",
         "model": "gemini-3.5-flash-lite",
         "verification_status": "needs_review",
-        "accessibility_claim": "unknown"
+        "accessibility_claim": "unknown",
+        "matching_distance_m": 9.235
       }
     },
     {
@@ -285,7 +298,7 @@
         "mapillary_image_id": "2861634120832871",
         "captured_at": 1541486429179,
         "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
-        "path_id": null,
+        "path_id": "osm_way_1446852972",
         "feature_name": "surface",
         "predicted_value": "uneven",
         "evidence_type": "surface",
@@ -294,7 +307,8 @@
         "visual_explanation": "The roadside and shoulder areas show rough, cracked concrete and unpaved dirt surfaces with puddles and irregularities.",
         "model": "gemini-3.5-flash-lite",
         "verification_status": "needs_review",
-        "accessibility_claim": "unknown"
+        "accessibility_claim": "unknown",
+        "matching_distance_m": 34.379
       }
     },
     {
@@ -313,7 +327,7 @@
         "mapillary_image_id": "2861634120832871",
         "captured_at": 1541486429179,
         "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
-        "path_id": null,
+        "path_id": "osm_way_1446852972",
         "feature_name": "curb",
         "predicted_value": "unknown",
         "evidence_type": "curb",
@@ -322,7 +336,8 @@
         "visual_explanation": "There are no clear standard curbs separating the roadway from the shoulders or walkways on either side.",
         "model": "gemini-3.5-flash-lite",
         "verification_status": "needs_review",
-        "accessibility_claim": "unknown"
+        "accessibility_claim": "unknown",
+        "matching_distance_m": 34.379
       }
     },
     {
@@ -341,7 +356,7 @@
         "mapillary_image_id": "2861634120832871",
         "captured_at": 1541486429179,
         "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
-        "path_id": null,
+        "path_id": "osm_way_1446852972",
         "feature_name": "tactile_paving",
         "predicted_value": "unknown",
         "evidence_type": "tactile_paving",
@@ -350,7 +365,8 @@
         "visual_explanation": "No tactile paving is visible anywhere along the path or roadside.",
         "model": "gemini-3.5-flash-lite",
         "verification_status": "needs_review",
-        "accessibility_claim": "unknown"
+        "accessibility_claim": "unknown",
+        "matching_distance_m": 34.379
       }
     },
     {
@@ -369,7 +385,7 @@
         "mapillary_image_id": "2861634120832871",
         "captured_at": 1541486429179,
         "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
-        "path_id": null,
+        "path_id": "osm_way_1446852972",
         "feature_name": "stairs",
         "predicted_value": "unknown",
         "evidence_type": "stairs",
@@ -378,7 +394,8 @@
         "visual_explanation": "No stairs are visible in the captured street-level view.",
         "model": "gemini-3.5-flash-lite",
         "verification_status": "needs_review",
-        "accessibility_claim": "unknown"
+        "accessibility_claim": "unknown",
+        "matching_distance_m": 34.379
       }
     },
     {
@@ -397,7 +414,7 @@
         "mapillary_image_id": "2861634120832871",
         "captured_at": 1541486429179,
         "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
-        "path_id": null,
+        "path_id": "osm_way_1446852972",
         "feature_name": "ramp",
         "predicted_value": "unknown",
         "evidence_type": "ramp",
@@ -406,7 +423,8 @@
         "visual_explanation": "No specific accessibility ramps are clearly identifiable in the immediate frame.",
         "model": "gemini-3.5-flash-lite",
         "verification_status": "needs_review",
-        "accessibility_claim": "unknown"
+        "accessibility_claim": "unknown",
+        "matching_distance_m": 34.379
       }
     },
     {
@@ -425,7 +443,7 @@
         "mapillary_image_id": "197736268837290",
         "captured_at": 1541486428171,
         "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
-        "path_id": null,
+        "path_id": "osm_way_1446852972",
         "feature_name": "stairs",
         "predicted_value": "unknown",
         "evidence_type": "stairs",
@@ -434,7 +452,8 @@
         "visual_explanation": "No stairs are visible in the captured roadway environment.",
         "model": "gemini-3.5-flash-lite",
         "verification_status": "needs_review",
-        "accessibility_claim": "unknown"
+        "accessibility_claim": "unknown",
+        "matching_distance_m": 44.898
       }
     },
     {
@@ -453,7 +472,7 @@
         "mapillary_image_id": "197736268837290",
         "captured_at": 1541486428171,
         "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
-        "path_id": null,
+        "path_id": "osm_way_1446852972",
         "feature_name": "ramp",
         "predicted_value": "unknown",
         "evidence_type": "ramp",
@@ -462,7 +481,8 @@
         "visual_explanation": "No ramps are visible along the edges of the road.",
         "model": "gemini-3.5-flash-lite",
         "verification_status": "needs_review",
-        "accessibility_claim": "unknown"
+        "accessibility_claim": "unknown",
+        "matching_distance_m": 44.898
       }
     },
     {
@@ -481,7 +501,7 @@
         "mapillary_image_id": "197736268837290",
         "captured_at": 1541486428171,
         "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
-        "path_id": null,
+        "path_id": "osm_way_1446852972",
         "feature_name": "curb",
         "predicted_value": "unknown",
         "evidence_type": "curb",
@@ -490,7 +510,8 @@
         "visual_explanation": "There are no clear standard curbs separating the paved road from the shoulders or paths.",
         "model": "gemini-3.5-flash-lite",
         "verification_status": "needs_review",
-        "accessibility_claim": "unknown"
+        "accessibility_claim": "unknown",
+        "matching_distance_m": 44.898
       }
     },
     {
@@ -509,7 +530,7 @@
         "mapillary_image_id": "197736268837290",
         "captured_at": 1541486428171,
         "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
-        "path_id": null,
+        "path_id": "osm_way_1446852972",
         "feature_name": "dropped_curb",
         "predicted_value": "unknown",
         "evidence_type": "dropped_curb",
@@ -518,7 +539,8 @@
         "visual_explanation": "No dropped curbs are visible in the scene.",
         "model": "gemini-3.5-flash-lite",
         "verification_status": "needs_review",
-        "accessibility_claim": "unknown"
+        "accessibility_claim": "unknown",
+        "matching_distance_m": 44.898
       }
     },
     {
@@ -537,7 +559,7 @@
         "mapillary_image_id": "197736268837290",
         "captured_at": 1541486428171,
         "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
-        "path_id": null,
+        "path_id": "osm_way_1446852972",
         "feature_name": "tactile_paving",
         "predicted_value": "unknown",
         "evidence_type": "tactile_paving",
@@ -546,7 +568,8 @@
         "visual_explanation": "No tactile paving is present on the road or shoulders.",
         "model": "gemini-3.5-flash-lite",
         "verification_status": "needs_review",
-        "accessibility_claim": "unknown"
+        "accessibility_claim": "unknown",
+        "matching_distance_m": 44.898
       }
     },
     {
@@ -565,7 +588,7 @@
         "mapillary_image_id": "197736268837290",
         "captured_at": 1541486428171,
         "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
-        "path_id": null,
+        "path_id": "osm_way_1446852972",
         "feature_name": "obstacle",
         "predicted_value": "unknown",
         "evidence_type": "obstacle",
@@ -574,7 +597,8 @@
         "visual_explanation": "No immediate pedestrian obstacles are blocking the visible path, but the unpaved shoulders are uneven.",
         "model": "gemini-3.5-flash-lite",
         "verification_status": "needs_review",
-        "accessibility_claim": "unknown"
+        "accessibility_claim": "unknown",
+        "matching_distance_m": 44.898
       }
     },
     {
@@ -593,7 +617,7 @@
         "mapillary_image_id": "197736268837290",
         "captured_at": 1541486428171,
         "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
-        "path_id": null,
+        "path_id": "osm_way_1446852972",
         "feature_name": "surface",
         "predicted_value": "smooth",
         "evidence_type": "surface",
@@ -602,7 +626,8 @@
         "visual_explanation": "The central asphalt road surface appears generally smooth and paved.",
         "model": "gemini-3.5-flash-lite",
         "verification_status": "needs_review",
-        "accessibility_claim": "unknown"
+        "accessibility_claim": "unknown",
+        "matching_distance_m": 44.898
       }
     },
     {
@@ -630,7 +655,8 @@
         "visual_explanation": "The road surface consists of worn asphalt with dirt and unpaved shoulders on the sides.",
         "model": "gemini-3.5-flash-lite",
         "verification_status": "needs_review",
-        "accessibility_claim": "unknown"
+        "accessibility_claim": "unknown",
+        "matching_distance_m": 50.657
       }
     },
     {
@@ -658,7 +684,8 @@
         "visual_explanation": "No raised curbs are visible along the road edges, which transition directly into unpaved dirt shoulders.",
         "model": "gemini-3.5-flash-lite",
         "verification_status": "needs_review",
-        "accessibility_claim": "unknown"
+        "accessibility_claim": "unknown",
+        "matching_distance_m": 50.657
       }
     },
     {
@@ -686,7 +713,8 @@
         "visual_explanation": "No tactile paving is visible in the view.",
         "model": "gemini-3.5-flash-lite",
         "verification_status": "needs_review",
-        "accessibility_claim": "unknown"
+        "accessibility_claim": "unknown",
+        "matching_distance_m": 50.657
       }
     },
     {
@@ -714,7 +742,8 @@
         "visual_explanation": "No stairs are visible in this rural road setting.",
         "model": "gemini-3.5-flash-lite",
         "verification_status": "needs_review",
-        "accessibility_claim": "unknown"
+        "accessibility_claim": "unknown",
+        "matching_distance_m": 50.657
       }
     },
     {
@@ -742,7 +771,8 @@
         "visual_explanation": "No ramps are present in the image.",
         "model": "gemini-3.5-flash-lite",
         "verification_status": "needs_review",
-        "accessibility_claim": "unknown"
+        "accessibility_claim": "unknown",
+        "matching_distance_m": 50.657
       }
     },
     {
@@ -770,7 +800,8 @@
         "visual_explanation": "There are no immediate obstacles blocking the travel path in the foreground.",
         "model": "gemini-3.5-flash-lite",
         "verification_status": "needs_review",
-        "accessibility_claim": "unknown"
+        "accessibility_claim": "unknown",
+        "matching_distance_m": 50.657
       }
     }
   ],

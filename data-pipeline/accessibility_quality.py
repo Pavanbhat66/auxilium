@@ -211,7 +211,7 @@ def build_matching_report(evidence, osm):
         },
         "observations_per_osm_path": dict(sorted(associated.items())),
         "observations": observations,
-        "status": "provisional_until_expanded_osm_dataset_is_available" if len(paths) <= 6 else "current_dataset",
+        "status": "current_dataset" if osm.get("metadata", {}).get("coverage_complete") is True else "provisional_until_full_city_osm_dataset_is_available",
     }
 
 

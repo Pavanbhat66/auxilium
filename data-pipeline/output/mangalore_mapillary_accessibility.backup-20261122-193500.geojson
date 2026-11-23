@@ -1,0 +1,793 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "mapillary_detection_2899502876935017",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          74.813013130585,
+          12.902830004871
+        ]
+      },
+      "properties": {
+        "city": "mangalore",
+        "source": "mapillary",
+        "mapillary_image_id": "2890914187793886",
+        "mapillary_detection_id": "2899502876935017",
+        "captured_at": 1541486427182,
+        "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
+        "thumbnail_url": "https://scontent.fixe1-2.fna.fbcdn.net/m1/v/t6/AQOeFqMbTA-WrWzJ-H9YECBBE2naKR7DxT7cn--IqSE2-7l_p8eASV1u37OQh8o9as6jgCv7kdfR9P7gH-dv35Kfn8aOW-YrVijLf1r2rl7RurX33VXlaikiA9jnQvGfOhS5o_if83uakXNjjBOfbmzCh9w8yCLsXO8ci99zUMkBXw?stp=s1024x768&edm=AOnQwmMEAAAA&_nc_gid=QiDLwAkmzZDqXPbKieoKWg&_nc_oc=AdrdIWJargU0hqoj8DQaoe0-AcKucMsoJc7gDdyd_pFf2Rb46ojC2MJSs_zSRJZmcQF76d6gFZQqpZDvnSsX6TZ7&ccb=10-5&oh=00_AQPFho4Tp8qz-g06cfdWcGU5hF_KO3j6t8_yXl8coxybQQ&oe=6B07C235&_nc_sid=201bca",
+        "evidence_type": "construction",
+        "raw_value": "construction--flat--driveway",
+        "verification_status": "needs_review",
+        "accessibility_claim": "unknown"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "mapillary_detection_204882838122633",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          74.813014600639,
+          12.902776623178
+        ]
+      },
+      "properties": {
+        "city": "mangalore",
+        "source": "mapillary",
+        "mapillary_image_id": "197736268837290",
+        "mapillary_detection_id": "204882838122633",
+        "captured_at": 1541486428171,
+        "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
+        "thumbnail_url": "https://scontent.fixe1-2.fna.fbcdn.net/m1/v/t6/AQN73tFCoqFhKe7okK4z0cHFEMySssNiY0sD8AtA3TYtdsKjGcC9cBrV8R10Cn041W1BdGASDn0ktQG2LlIIJkzs4QdBDP4vYSXb1c8DBCE0qKKYMrCZbvug57ng33FN5dfDUIkmu_uECfxWEl8h20Jaepn0I1h-ZS4RVHVzRr6cJw?stp=s1024x768&edm=AOnQwmMEAAAA&_nc_gid=QiDLwAkmzZDqXPbKieoKWg&_nc_oc=AdrOGbbGufecTYUNxyhXtMAyLI62kj5GqwPaXACLKUBgb088DslNUqUZGsTxC0x_mkSWdScSMrUudKx9aBaCLiVp&ccb=10-5&oh=00_AQPX12hszWPVKfLwa18cUYolv_vj_NmhMT9zvGgKiyvvFw&oe=6B0796BA&_nc_sid=201bca",
+        "evidence_type": "construction",
+        "raw_value": "construction--flat--driveway",
+        "verification_status": "needs_review",
+        "accessibility_claim": "unknown"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "mapillary_detection_2870281449968138",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          74.813018879521,
+          12.90267877029
+        ]
+      },
+      "properties": {
+        "city": "mangalore",
+        "source": "mapillary",
+        "mapillary_image_id": "2861634120832871",
+        "mapillary_detection_id": "2870281449968138",
+        "captured_at": 1541486429179,
+        "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
+        "thumbnail_url": "https://scontent.fixe1-2.fna.fbcdn.net/m1/v/t6/AQNOYebMGJPVJRc9b8NztrwfIn4gQe5aJ8nouUEYkJzuFjwkFNltFbpTVj1jqSedNCQkmNMiqtSWw3McmfCijvXb899sEo_q32gvSJgJYen-X0FlG6pRWBp5REeUu_BblYge9BqrdV3bD4Ltf2qxoBT-CRWC9lY3tslYAqNkcILbOg?stp=s1024x768&edm=AOnQwmMEAAAA&_nc_gid=QiDLwAkmzZDqXPbKieoKWg&_nc_oc=AdpFCKkQa6qeVUfJJh8i7XoN9bD-rk7TJvp5DzTPn-YoeqE8q59FZMMt9iUimVzRvhzeLmTHIoz5l26oxB_X50io&ccb=10-5&oh=00_AQOSljg_OoFhN_i2Y1jZVHOOfct9-P1nWGfHQabdOlyeKg&oe=6B07BC4A&_nc_sid=201bca",
+        "evidence_type": "construction",
+        "raw_value": "construction--flat--driveway",
+        "verification_status": "needs_review",
+        "accessibility_claim": "unknown"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "mapillary_ai_518599929314151_0",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          74.81355277629,
+          12.900469622049
+        ]
+      },
+      "properties": {
+        "city": "mangalore",
+        "source": "gemini_ai",
+        "mapillary_image_id": "518599929314151",
+        "captured_at": 1541486471146,
+        "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
+        "path_id": null,
+        "feature_name": "surface",
+        "predicted_value": "uneven",
+        "evidence_type": "surface",
+        "raw_value": "uneven",
+        "confidence": 0.85,
+        "visual_explanation": "The road and roadside shoulder are composed of dirt, sand, and gravel with visible ruts, puddles, and uneven terrain.",
+        "model": "gemini-3.5-flash-lite",
+        "verification_status": "needs_review",
+        "accessibility_claim": "unknown"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "mapillary_ai_518599929314151_1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          74.81355277629,
+          12.900469622049
+        ]
+      },
+      "properties": {
+        "city": "mangalore",
+        "source": "gemini_ai",
+        "mapillary_image_id": "518599929314151",
+        "captured_at": 1541486471146,
+        "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
+        "path_id": null,
+        "feature_name": "stairs",
+        "predicted_value": "unknown",
+        "evidence_type": "stairs",
+        "raw_value": "unknown",
+        "confidence": 0.9,
+        "visual_explanation": "No stairs are visible within the image frame.",
+        "model": "gemini-3.5-flash-lite",
+        "verification_status": "needs_review",
+        "accessibility_claim": "unknown"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "mapillary_ai_518599929314151_2",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          74.81355277629,
+          12.900469622049
+        ]
+      },
+      "properties": {
+        "city": "mangalore",
+        "source": "gemini_ai",
+        "mapillary_image_id": "518599929314151",
+        "captured_at": 1541486471146,
+        "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
+        "path_id": null,
+        "feature_name": "ramp",
+        "predicted_value": "unknown",
+        "evidence_type": "ramp",
+        "raw_value": "unknown",
+        "confidence": 0.9,
+        "visual_explanation": "No pedestrian ramps are visible.",
+        "model": "gemini-3.5-flash-lite",
+        "verification_status": "needs_review",
+        "accessibility_claim": "unknown"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "mapillary_ai_518599929314151_3",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          74.81355277629,
+          12.900469622049
+        ]
+      },
+      "properties": {
+        "city": "mangalore",
+        "source": "gemini_ai",
+        "mapillary_image_id": "518599929314151",
+        "captured_at": 1541486471146,
+        "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
+        "path_id": null,
+        "feature_name": "curb",
+        "predicted_value": "unknown",
+        "evidence_type": "curb",
+        "raw_value": "unknown",
+        "confidence": 0.9,
+        "visual_explanation": "There are no standard raised curbs separating the road from the unpaved shoulder.",
+        "model": "gemini-3.5-flash-lite",
+        "verification_status": "needs_review",
+        "accessibility_claim": "unknown"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "mapillary_ai_518599929314151_4",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          74.81355277629,
+          12.900469622049
+        ]
+      },
+      "properties": {
+        "city": "mangalore",
+        "source": "gemini_ai",
+        "mapillary_image_id": "518599929314151",
+        "captured_at": 1541486471146,
+        "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
+        "path_id": null,
+        "feature_name": "dropped_curb",
+        "predicted_value": "unknown",
+        "evidence_type": "dropped_curb",
+        "raw_value": "unknown",
+        "confidence": 0.9,
+        "visual_explanation": "No sidewalks or dropped curbs are present.",
+        "model": "gemini-3.5-flash-lite",
+        "verification_status": "needs_review",
+        "accessibility_claim": "unknown"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "mapillary_ai_518599929314151_5",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          74.81355277629,
+          12.900469622049
+        ]
+      },
+      "properties": {
+        "city": "mangalore",
+        "source": "gemini_ai",
+        "mapillary_image_id": "518599929314151",
+        "captured_at": 1541486471146,
+        "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
+        "path_id": null,
+        "feature_name": "tactile_paving",
+        "predicted_value": "unknown",
+        "evidence_type": "tactile_paving",
+        "raw_value": "unknown",
+        "confidence": 0.9,
+        "visual_explanation": "No tactile paving tiles are visible in this rural or semi-urban road setting.",
+        "model": "gemini-3.5-flash-lite",
+        "verification_status": "needs_review",
+        "accessibility_claim": "unknown"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "mapillary_ai_518599929314151_6",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          74.81355277629,
+          12.900469622049
+        ]
+      },
+      "properties": {
+        "city": "mangalore",
+        "source": "gemini_ai",
+        "mapillary_image_id": "518599929314151",
+        "captured_at": 1541486471146,
+        "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
+        "path_id": null,
+        "feature_name": "obstacle",
+        "predicted_value": "present",
+        "evidence_type": "obstacle",
+        "raw_value": "present",
+        "confidence": 0.8,
+        "visual_explanation": "Vehicles such as trucks and cars parked or operating along the side and road area, as well as uneven dirt paths, act as environmental elements affecting pedestrian pathways.",
+        "model": "gemini-3.5-flash-lite",
+        "verification_status": "needs_review",
+        "accessibility_claim": "unknown"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "mapillary_ai_2861634120832871_0",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          74.813018879521,
+          12.90267877029
+        ]
+      },
+      "properties": {
+        "city": "mangalore",
+        "source": "gemini_ai",
+        "mapillary_image_id": "2861634120832871",
+        "captured_at": 1541486429179,
+        "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
+        "path_id": null,
+        "feature_name": "surface",
+        "predicted_value": "uneven",
+        "evidence_type": "surface",
+        "raw_value": "uneven",
+        "confidence": 0.85,
+        "visual_explanation": "The roadside and shoulder areas show rough, cracked concrete and unpaved dirt surfaces with puddles and irregularities.",
+        "model": "gemini-3.5-flash-lite",
+        "verification_status": "needs_review",
+        "accessibility_claim": "unknown"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "mapillary_ai_2861634120832871_1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          74.813018879521,
+          12.90267877029
+        ]
+      },
+      "properties": {
+        "city": "mangalore",
+        "source": "gemini_ai",
+        "mapillary_image_id": "2861634120832871",
+        "captured_at": 1541486429179,
+        "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
+        "path_id": null,
+        "feature_name": "curb",
+        "predicted_value": "unknown",
+        "evidence_type": "curb",
+        "raw_value": "unknown",
+        "confidence": 0.9,
+        "visual_explanation": "There are no clear standard curbs separating the roadway from the shoulders or walkways on either side.",
+        "model": "gemini-3.5-flash-lite",
+        "verification_status": "needs_review",
+        "accessibility_claim": "unknown"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "mapillary_ai_2861634120832871_2",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          74.813018879521,
+          12.90267877029
+        ]
+      },
+      "properties": {
+        "city": "mangalore",
+        "source": "gemini_ai",
+        "mapillary_image_id": "2861634120832871",
+        "captured_at": 1541486429179,
+        "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
+        "path_id": null,
+        "feature_name": "tactile_paving",
+        "predicted_value": "unknown",
+        "evidence_type": "tactile_paving",
+        "raw_value": "unknown",
+        "confidence": 0.95,
+        "visual_explanation": "No tactile paving is visible anywhere along the path or roadside.",
+        "model": "gemini-3.5-flash-lite",
+        "verification_status": "needs_review",
+        "accessibility_claim": "unknown"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "mapillary_ai_2861634120832871_3",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          74.813018879521,
+          12.90267877029
+        ]
+      },
+      "properties": {
+        "city": "mangalore",
+        "source": "gemini_ai",
+        "mapillary_image_id": "2861634120832871",
+        "captured_at": 1541486429179,
+        "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
+        "path_id": null,
+        "feature_name": "stairs",
+        "predicted_value": "unknown",
+        "evidence_type": "stairs",
+        "raw_value": "unknown",
+        "confidence": 0.95,
+        "visual_explanation": "No stairs are visible in the captured street-level view.",
+        "model": "gemini-3.5-flash-lite",
+        "verification_status": "needs_review",
+        "accessibility_claim": "unknown"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "mapillary_ai_2861634120832871_4",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          74.813018879521,
+          12.90267877029
+        ]
+      },
+      "properties": {
+        "city": "mangalore",
+        "source": "gemini_ai",
+        "mapillary_image_id": "2861634120832871",
+        "captured_at": 1541486429179,
+        "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
+        "path_id": null,
+        "feature_name": "ramp",
+        "predicted_value": "unknown",
+        "evidence_type": "ramp",
+        "raw_value": "unknown",
+        "confidence": 0.9,
+        "visual_explanation": "No specific accessibility ramps are clearly identifiable in the immediate frame.",
+        "model": "gemini-3.5-flash-lite",
+        "verification_status": "needs_review",
+        "accessibility_claim": "unknown"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "mapillary_ai_197736268837290_0",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          74.813014600639,
+          12.902776623178
+        ]
+      },
+      "properties": {
+        "city": "mangalore",
+        "source": "gemini_ai",
+        "mapillary_image_id": "197736268837290",
+        "captured_at": 1541486428171,
+        "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
+        "path_id": null,
+        "feature_name": "stairs",
+        "predicted_value": "unknown",
+        "evidence_type": "stairs",
+        "raw_value": "unknown",
+        "confidence": 0.9,
+        "visual_explanation": "No stairs are visible in the captured roadway environment.",
+        "model": "gemini-3.5-flash-lite",
+        "verification_status": "needs_review",
+        "accessibility_claim": "unknown"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "mapillary_ai_197736268837290_1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          74.813014600639,
+          12.902776623178
+        ]
+      },
+      "properties": {
+        "city": "mangalore",
+        "source": "gemini_ai",
+        "mapillary_image_id": "197736268837290",
+        "captured_at": 1541486428171,
+        "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
+        "path_id": null,
+        "feature_name": "ramp",
+        "predicted_value": "unknown",
+        "evidence_type": "ramp",
+        "raw_value": "unknown",
+        "confidence": 0.9,
+        "visual_explanation": "No ramps are visible along the edges of the road.",
+        "model": "gemini-3.5-flash-lite",
+        "verification_status": "needs_review",
+        "accessibility_claim": "unknown"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "mapillary_ai_197736268837290_2",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          74.813014600639,
+          12.902776623178
+        ]
+      },
+      "properties": {
+        "city": "mangalore",
+        "source": "gemini_ai",
+        "mapillary_image_id": "197736268837290",
+        "captured_at": 1541486428171,
+        "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
+        "path_id": null,
+        "feature_name": "curb",
+        "predicted_value": "unknown",
+        "evidence_type": "curb",
+        "raw_value": "unknown",
+        "confidence": 0.85,
+        "visual_explanation": "There are no clear standard curbs separating the paved road from the shoulders or paths.",
+        "model": "gemini-3.5-flash-lite",
+        "verification_status": "needs_review",
+        "accessibility_claim": "unknown"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "mapillary_ai_197736268837290_3",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          74.813014600639,
+          12.902776623178
+        ]
+      },
+      "properties": {
+        "city": "mangalore",
+        "source": "gemini_ai",
+        "mapillary_image_id": "197736268837290",
+        "captured_at": 1541486428171,
+        "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
+        "path_id": null,
+        "feature_name": "dropped_curb",
+        "predicted_value": "unknown",
+        "evidence_type": "dropped_curb",
+        "raw_value": "unknown",
+        "confidence": 0.9,
+        "visual_explanation": "No dropped curbs are visible in the scene.",
+        "model": "gemini-3.5-flash-lite",
+        "verification_status": "needs_review",
+        "accessibility_claim": "unknown"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "mapillary_ai_197736268837290_4",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          74.813014600639,
+          12.902776623178
+        ]
+      },
+      "properties": {
+        "city": "mangalore",
+        "source": "gemini_ai",
+        "mapillary_image_id": "197736268837290",
+        "captured_at": 1541486428171,
+        "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
+        "path_id": null,
+        "feature_name": "tactile_paving",
+        "predicted_value": "unknown",
+        "evidence_type": "tactile_paving",
+        "raw_value": "unknown",
+        "confidence": 0.95,
+        "visual_explanation": "No tactile paving is present on the road or shoulders.",
+        "model": "gemini-3.5-flash-lite",
+        "verification_status": "needs_review",
+        "accessibility_claim": "unknown"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "mapillary_ai_197736268837290_5",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          74.813014600639,
+          12.902776623178
+        ]
+      },
+      "properties": {
+        "city": "mangalore",
+        "source": "gemini_ai",
+        "mapillary_image_id": "197736268837290",
+        "captured_at": 1541486428171,
+        "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
+        "path_id": null,
+        "feature_name": "obstacle",
+        "predicted_value": "unknown",
+        "evidence_type": "obstacle",
+        "raw_value": "unknown",
+        "confidence": 0.7,
+        "visual_explanation": "No immediate pedestrian obstacles are blocking the visible path, but the unpaved shoulders are uneven.",
+        "model": "gemini-3.5-flash-lite",
+        "verification_status": "needs_review",
+        "accessibility_claim": "unknown"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "mapillary_ai_197736268837290_6",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          74.813014600639,
+          12.902776623178
+        ]
+      },
+      "properties": {
+        "city": "mangalore",
+        "source": "gemini_ai",
+        "mapillary_image_id": "197736268837290",
+        "captured_at": 1541486428171,
+        "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
+        "path_id": null,
+        "feature_name": "surface",
+        "predicted_value": "smooth",
+        "evidence_type": "surface",
+        "raw_value": "smooth",
+        "confidence": 0.85,
+        "visual_explanation": "The central asphalt road surface appears generally smooth and paved.",
+        "model": "gemini-3.5-flash-lite",
+        "verification_status": "needs_review",
+        "accessibility_claim": "unknown"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "mapillary_ai_2890914187793886_0",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          74.813013130585,
+          12.902830004871
+        ]
+      },
+      "properties": {
+        "city": "mangalore",
+        "source": "gemini_ai",
+        "mapillary_image_id": "2890914187793886",
+        "captured_at": 1541486427182,
+        "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
+        "path_id": null,
+        "feature_name": "surface",
+        "predicted_value": "uneven",
+        "evidence_type": "surface",
+        "raw_value": "uneven",
+        "confidence": 0.85,
+        "visual_explanation": "The road surface consists of worn asphalt with dirt and unpaved shoulders on the sides.",
+        "model": "gemini-3.5-flash-lite",
+        "verification_status": "needs_review",
+        "accessibility_claim": "unknown"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "mapillary_ai_2890914187793886_1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          74.813013130585,
+          12.902830004871
+        ]
+      },
+      "properties": {
+        "city": "mangalore",
+        "source": "gemini_ai",
+        "mapillary_image_id": "2890914187793886",
+        "captured_at": 1541486427182,
+        "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
+        "path_id": null,
+        "feature_name": "curb",
+        "predicted_value": "unknown",
+        "evidence_type": "curb",
+        "raw_value": "unknown",
+        "confidence": 0.9,
+        "visual_explanation": "No raised curbs are visible along the road edges, which transition directly into unpaved dirt shoulders.",
+        "model": "gemini-3.5-flash-lite",
+        "verification_status": "needs_review",
+        "accessibility_claim": "unknown"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "mapillary_ai_2890914187793886_2",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          74.813013130585,
+          12.902830004871
+        ]
+      },
+      "properties": {
+        "city": "mangalore",
+        "source": "gemini_ai",
+        "mapillary_image_id": "2890914187793886",
+        "captured_at": 1541486427182,
+        "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
+        "path_id": null,
+        "feature_name": "tactile_paving",
+        "predicted_value": "unknown",
+        "evidence_type": "tactile_paving",
+        "raw_value": "unknown",
+        "confidence": 0.95,
+        "visual_explanation": "No tactile paving is visible in the view.",
+        "model": "gemini-3.5-flash-lite",
+        "verification_status": "needs_review",
+        "accessibility_claim": "unknown"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "mapillary_ai_2890914187793886_3",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          74.813013130585,
+          12.902830004871
+        ]
+      },
+      "properties": {
+        "city": "mangalore",
+        "source": "gemini_ai",
+        "mapillary_image_id": "2890914187793886",
+        "captured_at": 1541486427182,
+        "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
+        "path_id": null,
+        "feature_name": "stairs",
+        "predicted_value": "unknown",
+        "evidence_type": "stairs",
+        "raw_value": "unknown",
+        "confidence": 0.95,
+        "visual_explanation": "No stairs are visible in this rural road setting.",
+        "model": "gemini-3.5-flash-lite",
+        "verification_status": "needs_review",
+        "accessibility_claim": "unknown"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "mapillary_ai_2890914187793886_4",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          74.813013130585,
+          12.902830004871
+        ]
+      },
+      "properties": {
+        "city": "mangalore",
+        "source": "gemini_ai",
+        "mapillary_image_id": "2890914187793886",
+        "captured_at": 1541486427182,
+        "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
+        "path_id": null,
+        "feature_name": "ramp",
+        "predicted_value": "unknown",
+        "evidence_type": "ramp",
+        "raw_value": "unknown",
+        "confidence": 0.95,
+        "visual_explanation": "No ramps are present in the image.",
+        "model": "gemini-3.5-flash-lite",
+        "verification_status": "needs_review",
+        "accessibility_claim": "unknown"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "mapillary_ai_2890914187793886_5",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          74.813013130585,
+          12.902830004871
+        ]
+      },
+      "properties": {
+        "city": "mangalore",
+        "source": "gemini_ai",
+        "mapillary_image_id": "2890914187793886",
+        "captured_at": 1541486427182,
+        "sequence_id": "ioo2v9j0h9tcb2svl42zqq",
+        "path_id": null,
+        "feature_name": "obstacle",
+        "predicted_value": "unknown",
+        "evidence_type": "obstacle",
+        "raw_value": "unknown",
+        "confidence": 0.8,
+        "visual_explanation": "There are no immediate obstacles blocking the travel path in the foreground.",
+        "model": "gemini-3.5-flash-lite",
+        "verification_status": "needs_review",
+        "accessibility_claim": "unknown"
+      }
+    }
+  ],
+  "metadata": {
+    "city": "mangalore",
+    "bbox": [
+      74.78,
+      12.8,
+      75.05,
+      13.0
+    ],
+    "source": "mapillary",
+    "ai_provider": "google_gemini",
+    "ai_model": "gemini-3.5-flash-lite",
+    "ai_images_analyzed": 3,
+    "ai_images_failed": 0,
+    "ai_quota_exhausted": false,
+    "note": "Evidence only. Review before using for accessible routing."
+  }
+}

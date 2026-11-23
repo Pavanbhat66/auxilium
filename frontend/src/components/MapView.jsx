@@ -34,6 +34,15 @@ function MapView({ profile, onRouteChange }) {
   const [routeError, setRouteError] = useState("");
   const [evidence, setEvidence] = useState([]);
   const [osmPaths, setOsmPaths] = useState([]);
+  const [reviewDecisions, setReviewDecisions] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("auxilium-review-decisions") || "{}"); } catch { return {}; }
+  });
+
+  function reviewEvidence(evidenceId, decision) {
+    const next = { ...reviewDecisions, [evidenceId]: decision };
+    setReviewDecisions(next);
+    localStorage.setItem("auxilium-review-decisions", JSON.stringify(next));
+  }
 
   useEffect(() => {
     let active = true;
@@ -137,7 +146,7 @@ function MapView({ profile, onRouteChange }) {
   }
 
   return <div className="map-canvas">
-    <MapContainer center={[12.899738, 74.983481]} zoom={16} className="leaflet-map" zoomControl={false}>
+    <MapContainer center={[12.9015, 74.8132]} zoom={15} className="leaflet-map" zoomControl={false}>
       <TileLayer attribution="&copy; OpenStreetMap contributors" url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
       <LocationSelector onLocationPick={handleLocationPick} />
       <LocationTracker enabled={tracking} onLocation={handleLocationUpdate} onError={handleLocationError} />
@@ -156,6 +165,7 @@ function MapView({ profile, onRouteChange }) {
         const [longitude, latitude] = feature.geometry.coordinates;
         const properties = feature.properties || {};
         const isGemini = properties.source === "gemini_ai";
+        const decision = reviewDecisions[feature.id] || "pending";
         return <CircleMarker key={feature.id} center={[latitude, longitude]} radius={isGemini ? 6 : 7} pathOptions={{ color: isGemini ? "#7046b8" : "#c47b00", fillColor: isGemini ? "#a884db" : "#f2b84b", fillOpacity: 0.9 }}>
           <Popup>
             <strong>{isGemini ? "Gemini visual observation" : "Mapillary detection"}</strong><br />
@@ -166,6 +176,12 @@ function MapView({ profile, onRouteChange }) {
             {properties.model && <>Model: {properties.model}<br /></>}
             OSM path: {properties.path_id || "not associated"}<br />
             Status: {properties.verification_status || "needs_review"}<br />
+            Review: {decision}<br />
+            <span className="evidence-review-actions">
+              <button type="button" onClick={() => reviewEvidence(feature.id, "confirmed")}>Accept</button>
+              <button type="button" onClick={() => reviewEvidence(feature.id, "rejected")}>Reject</button>
+              <button type="button" onClick={() => reviewEvidence(feature.id, "needs_more_evidence")}>Flag</button>
+            </span><br />
             <em>Evidence requires human verification; it is not a confirmed accessibility fact.</em>
           </Popup>
         </CircleMarker>;

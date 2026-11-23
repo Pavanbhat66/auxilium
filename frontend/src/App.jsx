@@ -16,6 +16,7 @@ function App() {
 
   useEffect(() => {
     if (!firebaseConfigured) {
+      setUser({ id: "demo-user", name: "Demo reviewer", email: "demo@auxilium.local", accessibilityProfile: "general", phoneNumber: "", emergencyContactName: "", emergencyContactPhone: "", bloodGroup: "" });
       setAuthLoading(false);
       return undefined;
     }
@@ -43,6 +44,7 @@ function App() {
   async function saveUser(nextUser) {
     setProfileError("");
     setUser(nextUser);
+    if (!firebaseConfigured) return true;
     try {
       await saveUserProfile(nextUser);
       return true;
@@ -77,7 +79,7 @@ function App() {
   }
 
   async function handleSignOut() {
-    await logOut();
+    if (firebaseConfigured) await logOut();
     setProfilePage(false);
     setUser(null);
   }
@@ -100,8 +102,9 @@ function App() {
         <h1 id="auth-title">Move through your city with more clarity.</h1>
         <p className="auth-intro">Plan routes with your mobility needs in view.</p>
         {authError && <p className="form-error" role="alert">{authError}</p>}
-        {!firebaseConfigured && <p className="form-error" role="alert">Firebase is not configured yet. Add the project values to <code>frontend/.env.local</code>.</p>}
+        {!firebaseConfigured && <p className="form-error" role="alert">Firebase is not configured; local demo mode is available on this device.</p>}
         <button className="google-button" type="button" onClick={handleGoogleSignIn} disabled={!firebaseConfigured}>Continue with Google</button>
+        {!firebaseConfigured && <button className="primary-button" type="button" onClick={() => setUser({ id: "demo-user", name: "Demo reviewer", email: "demo@auxilium.local", accessibilityProfile: "general", phoneNumber: "", emergencyContactName: "", emergencyContactPhone: "", bloodGroup: "" })}>Open local demo</button>}
         <p className="local-note">Your account and mobility profile are stored securely through Firebase.</p>
       </section>
       <aside className="auth-aside"><p>Accessible journeys begin with a route that considers you.</p></aside>
@@ -154,7 +157,7 @@ function App() {
   }
 
   return <main className="map-page">
-    <MapView profile={user.accessibilityProfile} onRouteChange={setRouteDetails} />
+      <MapView profile={user.accessibilityProfile} onRouteChange={setRouteDetails} />
     <header className="top-bar">
       <div className="brand"><span>AUXILIUM</span><small>Accessible routing</small></div>
       <div className="map-search" aria-label="Route instructions">Select a start point, then select a destination on the map.</div>

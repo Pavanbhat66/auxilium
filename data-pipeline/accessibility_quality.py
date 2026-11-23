@@ -23,9 +23,9 @@ PREDICTED_VALUES = {"present", "smooth", "uneven", "damaged", "unknown"}
 REVIEW_DECISIONS_ALLOWED = {"pending", "confirmed", "rejected", "needs_more_evidence"}
 ELIGIBLE_HIGHWAYS = {"footway", "path", "pedestrian", "steps", "service", "living_street", "residential", "cycleway", "track"}
 REVIEW_FIELDS = [
-    "evidence_id", "mapillary_image_id", "observation_category", "predicted_value",
+    "evidence_id", "evidence_source", "mapillary_image_id", "observation_category", "predicted_value",
     "ai_explanation", "confidence", "latitude", "longitude", "associated_osm_path_id",
-    "matching_distance_m", "verification_status", "reviewer_decision", "reviewer_notes",
+    "matching_distance_m", "model", "verification_status", "reviewer_decision", "reviewer_notes",
 ]
 
 
@@ -174,7 +174,7 @@ def nearest_path(point, paths, threshold= MATCH_THRESHOLD_METERS):
 
 
 def build_matching_report(evidence, osm):
-    ai_features = [feature for feature in evidence.get("features", []) if feature.get("properties", {}).get("source") == "gemini_ai"]
+    ai_features = [feature for feature in evidence.get("features", []) if feature.get("properties", {}).get("source") in {"gemini_ai", "mapillary"}]
     paths = osm.get("features", [])
     observations = []
     for feature in ai_features:
@@ -184,8 +184,8 @@ def build_matching_report(evidence, osm):
         observations.append({
             "evidence_id": feature.get("id"),
             "mapillary_image_id": properties.get("mapillary_image_id"),
-            "feature_name": properties.get("feature_name", "other"),
-            "predicted_value": properties.get("predicted_value", "unknown"),
+            "feature_name": properties.get("feature_name", properties.get("evidence_type", "other")),
+            "predicted_value": properties.get("predicted_value", properties.get("raw_value", "unknown")),
             "longitude": coordinates[0],
             "latitude": coordinates[1],
             **matching,
@@ -228,7 +228,7 @@ def write_review_queue(evidence, matching):
     rows = []
     for feature in evidence.get("features", []):
         properties = feature.get("properties", {})
-        if properties.get("source") != "gemini_ai":
+        if properties.get("source") not in {"gemini_ai", "mapillary"}:
             continue
         coordinates = feature.get("geometry", {}).get("coordinates", [None, None])
         match = matching_by_id.get(feature.get("id"), {})
@@ -238,31 +238,42 @@ def write_review_queue(evidence, matching):
             decision = "pending"
         rows.append({
             "evidence_id": feature.get("id", ""),
+            "evidence_source": properties.get("source", ""),
             "mapillary_image_id": properties.get("mapillary_image_id", ""),
-            "observation_category": properties.get("feature_name", "other"),
-            "predicted_value": properties.get("predicted_value", "unknown"),
+            "observation_category": properties.get("feature_name", properties.get("evidence_type", "other")),
+            "predicted_value": properties.get("predicted_value", properties.get("raw_value", "unknown")),
             "ai_explanation": properties.get("visual_explanation", ""),
-            "confidence": properties.get("confidence", 0),
+            "confidence": properties.get("confidence", ""),
             "latitude": coordinates[1],
             "longitude": coordinates[0],
             "associated_osm_path_id": match.get("matched_path_id"),
             "matching_distance_m": match.get("nearest_distance_m"),
+            "model": properties.get("model", ""),
             "verification_status": properties.get("verification_status", "needs_review"),
             "reviewer_decision": decision,
             "reviewer_notes": previous.get("reviewer_notes", ""),
         })
     with REVIEW_QUEUE.open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=REVIEW_FIELDS)
+        writer = csv.DictWriter(handle, fieldnames=REVIEW_FIELDS, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
     return rows
+
+
+def synchronize_review_artifacts(evidence, osm=None):
+    """Regenerate matching and review artifacts while preserving decisions."""
+    osm = osm or read_json(OSM_FILE)
+    matching = build_matching_report(evidence, osm)
+    write_json(MATCHING_REPORT, matching)
+    rows = write_review_queue(evidence, matching)
+    return matching, rows
 
 
 def export_reviewed(input_path, output_path):
     canonical = {
         feature.get("id"): feature
         for feature in read_json(EVIDENCE_FILE).get("features", [])
-        if feature.get("properties", {}).get("source") == "gemini_ai"
+        if feature.get("properties", {}).get("source") in {"gemini_ai", "mapillary"}
     }
     rows = []
     with Path(input_path).open(newline="", encoding="utf-8") as handle:
@@ -277,10 +288,10 @@ def export_reviewed(input_path, output_path):
             coordinates = feature.get("geometry", {}).get("coordinates", [None, None])
             immutable_values = {
                 "mapillary_image_id": str(properties.get("mapillary_image_id", "")),
-                "observation_category": str(properties.get("feature_name", "other")),
-                "predicted_value": str(properties.get("predicted_value", "unknown")),
+                "observation_category": str(properties.get("feature_name", properties.get("evidence_type", "other"))),
+                "predicted_value": str(properties.get("predicted_value", properties.get("raw_value", "unknown"))),
                 "ai_explanation": str(properties.get("visual_explanation", "")),
-                "confidence": str(properties.get("confidence", 0)),
+                "confidence": str(properties.get("confidence", "")),
                 "latitude": str(coordinates[1]),
                 "longitude": str(coordinates[0]),
                 "verification_status": str(properties.get("verification_status", "needs_review")),

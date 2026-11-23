@@ -18,6 +18,7 @@ from accessibility_quality import (
     build_matching_report,
     nearest_path,
     read_json,
+    synchronize_review_artifacts,
     write_json,
 )
 from ingest_mapillary import (
@@ -36,6 +37,7 @@ OUTPUT_DIR = Path(__file__).resolve().parent / "output"
 INVENTORY_FILE = OUTPUT_DIR / "mangalore_image_inventory.json"
 COVERAGE_REPORT = OUTPUT_DIR / "mangalore_ai_coverage_report.json"
 OSM_FILE = OUTPUT_DIR / "pedestrian_paths.geojson"
+FRONTEND_EVIDENCE_FILE = Path(__file__).resolve().parents[1] / "frontend/public/data/mangalore_mapillary_accessibility.geojson"
 USER_AGENT = "AUXILIUM-AccessibilityResearch/1.0"
 TRANSIENT_MARKERS = ("429", "408", "500", "502", "503", "504", "timeout", "temporarily", "unavailable", "connection")
 
@@ -328,6 +330,19 @@ def save_evidence(evidence, path=EVIDENCE_FILE):
     atomic_write_json(path, evidence)
 
 
+def publish_evidence(evidence, osm_paths=None):
+    """Publish canonical evidence and refresh review artifacts safely."""
+    save_evidence(evidence)
+    try:
+        synchronize_review_artifacts(evidence, {"type": "FeatureCollection", "features": osm_paths or []})
+    except Exception as error:
+        print(f"Review artifact synchronization failed; canonical evidence preserved: {error}")
+    if FRONTEND_EVIDENCE_FILE.parent.exists():
+        temporary = FRONTEND_EVIDENCE_FILE.with_suffix(FRONTEND_EVIDENCE_FILE.suffix + ".tmp")
+        temporary.write_text(json.dumps(evidence, indent=2), encoding="utf-8")
+        temporary.replace(FRONTEND_EVIDENCE_FILE)
+
+
 def update_evidence_metadata(evidence):
     features = evidence.get("features", [])
     ai_image_ids = {
@@ -380,7 +395,7 @@ def analyze_batch(inventory_path=INVENTORY_FILE, batch_size=1, include_detection
             image["evidence_ids"] = [feature["id"] for feature in new_features]
             image["failure_reason"] = None
             analyzed += 1
-            save_evidence(evidence)
+            publish_evidence(evidence, osm_paths)
             atomic_write_json(inventory_path, inventory)
         except Exception as error:
             image["ai_status"] = "quota_blocked" if is_quota_error(error) else "failed"

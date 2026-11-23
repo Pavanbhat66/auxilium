@@ -44,6 +44,7 @@ select:focus { border-color: #2351d8; box-shadow: 0 0 0 3px #e7edff; }
 .location-status { max-width: 100%; margin: 0; padding: 6px 9px; border-radius: 6px; color: #48556a; background: rgba(255, 255, 255, .94); box-shadow: 0 3px 12px rgba(23, 32, 51, .1); font-size: 11px; text-align: right; }
 .route-options { position: absolute; z-index: 500; right: 20px; bottom: 75px; display: grid; gap: 6px; width: 240px; max-height: min(40vh, 280px); overflow-y: auto; padding: 12px; border-radius: 10px; background: rgba(255, 255, 255, .97); box-shadow: 0 8px 30px rgba(23, 32, 51, .16); }
 .route-options > p { margin: 0 0 2px; color: #677286; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.map-attribution { position: absolute; z-index: 500; left: 20px; bottom: 18px; max-width: min(520px, calc(100vw - 40px)); margin: 0; padding: 7px 10px; border-radius: 6px; color: #5d6879; background: rgba(255, 255, 255, .9); box-shadow: 0 4px 18px rgba(23, 32, 51, .1); font-size: 10px; line-height: 1.35; }
 .route-option { display: flex; justify-content: space-between; gap: 8px; align-items: center; min-height: 42px; padding: 7px 9px; border: 1px solid #e1e5ec; border-radius: 7px; color: #364258; background: #fff; text-align: left; }
 .route-option strong { font-size: 12px; }
 .route-option span { color: #697588; font-size: 11px; white-space: nowrap; }

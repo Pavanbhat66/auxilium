@@ -12,7 +12,11 @@ import argparse
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 import requests
-from dotenv import load_dotenv
+try:
+    from dotenv import load_dotenv
+except ImportError:  # Keep local validation/tests usable without optional dotenv.
+    def load_dotenv(*_paths, **_kwargs):
+        return False
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]

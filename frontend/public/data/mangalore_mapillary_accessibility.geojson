@@ -785,7 +785,7 @@
     "source": "mapillary",
     "ai_provider": "google_gemini",
     "ai_model": "gemini-3.5-flash-lite",
-    "ai_images_analyzed": 3,
+    "ai_images_analyzed": 4,
     "ai_images_failed": 0,
     "ai_quota_exhausted": false,
     "note": "Evidence only. Review before using for accessible routing."

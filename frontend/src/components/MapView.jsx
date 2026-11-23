@@ -32,6 +32,26 @@ function MapView({ profile, onRouteChange }) {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [locationError, setLocationError] = useState("");
   const [routeError, setRouteError] = useState("");
+  const [evidence, setEvidence] = useState([]);
+
+  useEffect(() => {
+    let active = true;
+    fetch("/data/mangalore_mapillary_accessibility.geojson")
+      .then((response) => response.ok ? response.json() : null)
+      .then((data) => {
+        if (!active) return;
+        const unique = new Map();
+        for (const feature of data?.features || []) {
+          const coordinates = feature?.geometry?.coordinates;
+          if (feature?.geometry?.type !== "Point" || !Array.isArray(coordinates) || coordinates.length !== 2) continue;
+          const id = feature.id || `${coordinates[0]}:${coordinates[1]}`;
+          if (!unique.has(id)) unique.set(id, feature);
+        }
+        setEvidence([...unique.values()]);
+      })
+      .catch(() => { if (active) setEvidence([]); });
+    return () => { active = false; };
+  }, []);
 
   const handleLocationUpdate = useCallback((location) => {
     setCurrentLocation(location);
@@ -117,6 +137,24 @@ function MapView({ profile, onRouteChange }) {
         <Circle center={currentLocation.point} radius={currentLocation.accuracy} pathOptions={{ color: "#2351d8", fillColor: "#2351d8", fillOpacity: 0.12, weight: 1 }} />
         <CircleMarker center={currentLocation.point} radius={8} pathOptions={{ color: "#fff", weight: 3, fillColor: "#2351d8", fillOpacity: 1 }}><Popup>Your live location</Popup></CircleMarker>
       </>}
+      {evidence.map((feature) => {
+        const [longitude, latitude] = feature.geometry.coordinates;
+        const properties = feature.properties || {};
+        const isGemini = properties.source === "gemini_ai";
+        return <CircleMarker key={feature.id} center={[latitude, longitude]} radius={isGemini ? 6 : 7} pathOptions={{ color: isGemini ? "#7046b8" : "#c47b00", fillColor: isGemini ? "#a884db" : "#f2b84b", fillOpacity: 0.9 }}>
+          <Popup>
+            <strong>{isGemini ? "Gemini visual observation" : "Mapillary detection"}</strong><br />
+            Category: {properties.feature_name || properties.evidence_type || "unknown"}<br />
+            Value: {properties.predicted_value || properties.raw_value || "unknown"}<br />
+            {properties.confidence !== undefined && <>Confidence: {Math.round(Number(properties.confidence) * 100)}%<br /></>}
+            {properties.mapillary_image_id && <>Image ID: {properties.mapillary_image_id}<br /></>}
+            {properties.model && <>Model: {properties.model}<br /></>}
+            OSM path: {properties.path_id || "not associated"}<br />
+            Status: {properties.verification_status || "needs_review"}<br />
+            <em>Evidence requires human verification; it is not a confirmed accessibility fact.</em>
+          </Popup>
+        </CircleMarker>;
+      })}
       {routes.map((route, index) => <Polyline key={`${index}-${route.distance}`} positions={route.points} eventHandlers={{ click: () => selectRoute(index) }} pathOptions={{ color: index === selectedRouteIndex ? "#2351d8" : "#68758a", weight: index === selectedRouteIndex ? 7 : 4, opacity: index === selectedRouteIndex ? 0.9 : 0.52 }} />)}
     </MapContainer>
     <div className="location-controls">
@@ -130,6 +168,7 @@ function MapView({ profile, onRouteChange }) {
         <strong>Route {index + 1}</strong><span>{(route.distance / 1000).toFixed(2)} km · {Math.round(route.duration / 60)} min</span>
       </button>)}
     </section>}
+    <p className="map-attribution">Map data © OpenStreetMap contributors · Evidence © Mapillary · Gemini observations are AI-generated and require human verification.</p>
   </div>;
 }
 

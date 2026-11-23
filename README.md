@@ -42,6 +42,8 @@ Copy-Item data-pipeline/output/mangalore_mapillary_accessibility.geojson fronten
 
 The frontend displays these points as review markers. They are deliberately marked `needs_review` and `accessibility_claim: unknown`; Mapillary detections must not be treated as verified accessible or inaccessible paths without path matching and human verification.
 
+Evidence updates publish the canonical GeoJSON, refresh the OSM matching report and review queue, and synchronize the frontend copy. The review queue contains both direct Mapillary detections and Gemini observations; existing reviewer decisions and notes are preserved by evidence ID.
+
 To enable optional AI image analysis, set the keys in the environment and pass `--ai`:
 
 ```powershell

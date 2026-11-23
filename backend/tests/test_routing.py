@@ -21,6 +21,21 @@ class RoutingTests(unittest.TestCase):
         self.assertGreaterEqual(len(routes), 2)
         self.assertEqual(routes[0].edges[0].path_id, "safe-a")
 
+    def test_general_does_not_penalize_accessibility_evidence(self):
+        evidence = [{"geometry": {"type": "Point", "coordinates": [0.0005, 0]}, "properties": {"verification_status": "verified", "feature_name": "stairs"}}]
+        graph = PedestrianGraph([feature("direct", [[0, 0], [0.001, 0]], highway="footway")], evidence)
+        start, goal = graph.nearest_node((0, 0))[0], graph.nearest_node((0.001, 0))[0]
+        route = graph.shortest_path(start, goal, "general")
+        self.assertIsNotNone(route)
+        self.assertEqual(route.cost, route.edges[0].duration_s)
+
+    def test_route_validation_requires_complete_edge_chain(self):
+        graph = PedestrianGraph([feature("path", [[0, 0], [0.001, 0], [0.002, 0]])])
+        start, goal = graph.nearest_node((0, 0))[0], graph.nearest_node((0.002, 0))[0]
+        route = graph.shortest_path(start, goal, "general")
+        valid, reason = graph.validate_route(route, start, goal)
+        self.assertTrue(valid, reason)
+
     def test_unverified_gemini_evidence_is_warning_not_barrier(self):
         evidence = [{"geometry": {"type": "Point", "coordinates": [0.0005, 0]}, "properties": {"source": "gemini_ai", "feature_name": "stairs", "predicted_value": "present", "verification_status": "needs_review"}}]
         graph = PedestrianGraph([feature("path", [[0, 0], [0.001, 0]], highway="residential")], evidence)

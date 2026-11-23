@@ -1,6 +1,13 @@
 .env
 .env.*
 !.env.example
+__pycache__/
+*.py[cod]
 **/.env
 **/.env.*
 !**/.env.example
+
+# Large local extraction cache and generated pipeline artifacts
+data-pipeline/cache/
+**/__pycache__/
+*.backup-*.geojson

@@ -100,6 +100,31 @@ class AccessibilityQualityTests(unittest.TestCase):
         self.assertEqual(REVIEW_DECISIONS_ALLOWED, {"pending", "confirmed", "rejected", "needs_more_evidence"})
         self.assertEqual(MATCH_THRESHOLD_METERS, 50.0)
 
+    def test_review_queue_includes_mapillary_and_preserves_decisions_idempotently(self):
+        direct = {
+            "type": "Feature", "id": "direct-1", "geometry": {"type": "Point", "coordinates": [74.81, 12.90]},
+            "properties": {"source": "mapillary", "mapillary_image_id": "image-direct", "evidence_type": "construction", "raw_value": "construction--flat", "verification_status": "needs_review", "accessibility_claim": "unknown"},
+        }
+        evidence = {"type": "FeatureCollection", "features": [direct, point_feature("ai-1", [74.81, 12.90])]}
+        matching = build_matching_report(evidence, {"type": "FeatureCollection", "features": []})
+        with tempfile.TemporaryDirectory() as directory:
+            import accessibility_quality as quality
+            original_queue, original_decisions = quality.REVIEW_QUEUE, quality.REVIEW_DECISIONS
+            try:
+                quality.REVIEW_QUEUE = Path(directory) / "queue.csv"
+                quality.REVIEW_DECISIONS = Path(directory) / "decisions.json"
+                first = write_review_queue(evidence, matching)
+                first[0]["reviewer_decision"] = "confirmed"
+                first[0]["reviewer_notes"] = "Reviewed direct detection"
+                quality.REVIEW_DECISIONS.write_text(json.dumps([first[0]]), encoding="utf-8")
+                second = write_review_queue(evidence, matching)
+            finally:
+                quality.REVIEW_QUEUE, quality.REVIEW_DECISIONS = original_queue, original_decisions
+        self.assertEqual({row["evidence_id"] for row in second}, {"direct-1", "ai-1"})
+        preserved = next(row for row in second if row["evidence_id"] == "direct-1")
+        self.assertEqual(preserved["reviewer_decision"], "confirmed")
+        self.assertEqual(preserved["reviewer_notes"], "Reviewed direct detection")
+
     def test_invalid_review_decision_is_rejected(self):
         with tempfile.TemporaryDirectory() as directory:
             import accessibility_quality as quality

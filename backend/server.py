@@ -76,7 +76,15 @@ class Handler(BaseHTTPRequestHandler):
             if not routes:
                 self._send(422, {"error": "No pedestrian route was found for this profile"})
                 return
-            self._send(200, {"routes": [GRAPH.serialize_route(route, start, destination, profile, snap_warnings) for route in routes], "requested": {"start": start, "destination": destination}})
+            valid_routes = []
+            for route in routes:
+                valid, _ = GRAPH.validate_route(route, start_node, destination_node)
+                if valid:
+                    valid_routes.append(GRAPH.serialize_route(route, start, destination, profile, snap_warnings))
+            if not valid_routes:
+                self._send(422, {"error": "No complete pedestrian route was found for this profile"})
+                return
+            self._send(200, {"routes": valid_routes, "requested": {"start": start, "destination": destination}})
         except (ValueError, json.JSONDecodeError) as error:
             self._send(400, {"error": str(error)})
         except Exception as error:

@@ -1,0 +1,44 @@
+{
+  "bbox": [
+    74.78,
+    12.8,
+    75.05,
+    13.0
+  ],
+  "total_images_discovered": 541,
+  "total_unique_image_ids": 541,
+  "total_images_eligible": 541,
+  "total_images_analyzed_successfully": 1,
+  "images_analyzed_with_zero_findings": 1,
+  "total_accessibility_observations": 25,
+  "images_pending": 540,
+  "images_failed": 0,
+  "images_blocked_by_quota": 0,
+  "images_skipped_with_reasons": 0,
+  "analysis_completion_percentage": 0.18,
+  "observation_counts_by_category": {
+    "surface": 4,
+    "stairs": 4,
+    "ramp": 4,
+    "curb": 4,
+    "dropped_curb": 2,
+    "tactile_paving": 4,
+    "obstacle": 3
+  },
+  "observation_counts_by_predicted_value": {
+    "uneven": 3,
+    "unknown": 20,
+    "present": 1,
+    "smooth": 1
+  },
+  "confidence_distribution": {
+    "min": 0.7,
+    "max": 0.95,
+    "mean": 0.886
+  },
+  "human_review_queue_count": 25,
+  "human_reviewed_count": 0,
+  "remaining_pending_review_count": 25,
+  "last_updated": "2026-11-22T14:07:24.391442+00:00",
+  "status_note": "Coverage is not complete until every eligible inventory image has a terminal analyzed, failed, quota_blocked, or skipped_with_reason status."
+}

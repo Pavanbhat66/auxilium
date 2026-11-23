@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-11-23T15:44:36.186254+00:00",
+  "generated_at": "2026-11-23T16:37:55.485550+00:00",
   "evidence_file": "/home/himamshus06/Desktop/aux/auxilium/data-pipeline/output/mangalore_mapillary_accessibility.geojson",
   "osm_file": "/home/himamshus06/Desktop/aux/auxilium/data-pipeline/output/pedestrian_paths.geojson",
   "threshold_m": 50.0,
   "total_accessibility_observations": 28,
-  "total_osm_paths_considered": 230,
+  "total_osm_paths_considered": 9480,
   "matched_within_10m": 7,
   "matched_within_25m": 7,
   "matched_within_50m": 21,
@@ -329,5 +329,5 @@
       "matched_path_id": null
     }
   ],
-  "status": "provisional_until_full_city_osm_dataset_is_available"
+  "status": "current_dataset"
 }

@@ -151,9 +151,20 @@ def download_pbf(url, destination):
             return destination.stat().st_size
 
         partial = destination.with_suffix(destination.suffix + ".part")
-        with session.get(url, headers={"User-Agent": USER_AGENT}, stream=True, timeout=(20, 300)) as response:
+        offset = partial.stat().st_size if partial.exists() else 0
+        headers = {"User-Agent": USER_AGENT}
+        if offset and expected_size and offset < expected_size:
+            headers["Range"] = f"bytes={offset}-"
+        with session.get(url, headers=headers, stream=True, timeout=(20, 300)) as response:
             response.raise_for_status()
-            with partial.open("wb") as output:
+            if offset and response.status_code != 206:
+                raise RuntimeError("Geofabrik server did not honor the resume Range request; partial file preserved.")
+            if offset:
+                content_range = response.headers.get("Content-Range", "")
+                expected_prefix = f"bytes {offset}-"
+                if not content_range.startswith(expected_prefix):
+                    raise RuntimeError(f"Unexpected resume Content-Range {content_range!r}; partial file preserved.")
+            with partial.open("ab" if offset else "wb") as output:
                 for chunk in response.iter_content(chunk_size=1024 * 1024):
                     if chunk:
                         output.write(chunk)
@@ -266,6 +277,7 @@ def main():
             "extractor": args.source,
             "pbf_url": args.pbf_url if args.source == "geofabrik" else None,
             "osm_api_url": args.osm_api_url if args.source == "osm_api" else None,
+            "coverage_complete": tuple(args.bbox) == DEFAULT_BBOX,
             "pbf_size_bytes": pbf_size,
             "tile_size_degrees": args.tile_size,
             "tiles_processed": len(tiles),

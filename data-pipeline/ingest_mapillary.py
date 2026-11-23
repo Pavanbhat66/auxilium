@@ -24,6 +24,11 @@ load_dotenv(PROJECT_ROOT / ".env")
 CITY = "mangalore"
 BBOX = (74.78, 12.80, 75.05, 13.00)  # west, south, east, north
 TILE_SIZE_DEGREES = 0.02  # Keep each request small enough for dense city areas.
+# Mapillary rejects image queries at or above 0.010 square degrees.  Keep the
+# production grid comfortably below that limit while covering the full bbox.
+MAX_TILE_AREA_SQUARE_DEGREES = 0.008
+MAX_TILE_LONGITUDE_SPAN = 0.08
+MAX_TILE_LATITUDE_SPAN = 0.08
 MAX_IMAGES = 200  # Initial Mangalore import cap; increase after the first review.
 MAX_WORKERS = 6
 GRAPH_URL = "https://graph.mapillary.com"
@@ -143,13 +148,22 @@ def nearest_path_id(point, paths, max_distance_meters=50):
 
 
 def bbox_tiles(bbox):
+    """Yield a complete, non-overlapping grid of safe Mapillary bboxes.
+
+    The endpoint limit is expressed in square degrees.  The edge limits are
+    intentionally conservative as well, so a future bbox with a different
+    aspect ratio still cannot produce an oversized request.
+    """
     west, south, east, north = bbox
     longitude = west
     while longitude < east:
         latitude = south
-        tile_east = min(longitude + TILE_SIZE_DEGREES, east)
+        tile_east = min(longitude + MAX_TILE_LONGITUDE_SPAN, east)
         while latitude < north:
-            tile_north = min(latitude + TILE_SIZE_DEGREES, north)
+            tile_north = min(latitude + MAX_TILE_LATITUDE_SPAN, north)
+            area = (tile_east - longitude) * (tile_north - latitude)
+            if area >= 0.010 or area > MAX_TILE_AREA_SQUARE_DEGREES:
+                raise ValueError(f"Generated Mapillary tile is too large: {area:.9f} square degrees")
             yield longitude, latitude, tile_east, tile_north
             latitude = tile_north
         longitude = tile_east
@@ -273,8 +287,10 @@ def normalize_findings(findings):
 
 
 def load_existing_gemini_features():
-    if not OUTPUT_FILE.exists():
-        return []
+    return [
+        feature for feature in load_existing_features()
+        if feature.get("properties", {}).get("source") == "gemini_ai"
+    ]
 
 
 def load_existing_features():
@@ -282,11 +298,6 @@ def load_existing_features():
         return []
     try:
         return json.loads(OUTPUT_FILE.read_text(encoding="utf-8")).get("features", [])
-    except (OSError, json.JSONDecodeError):
-        return []
-    try:
-        features = json.loads(OUTPUT_FILE.read_text(encoding="utf-8")).get("features", [])
-        return [feature for feature in features if feature.get("properties", {}).get("source") == "gemini_ai"]
     except (OSError, json.JSONDecodeError):
         return []
 

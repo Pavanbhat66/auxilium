@@ -1,0 +1,31 @@
+{
+  "generated_at": "2026-11-20T10:28:04.750860+00:00",
+  "source_file": "D:\\AUXILIUM\\data-pipeline\\output\\mangalore_mapillary_accessibility.geojson",
+  "total_features": 28,
+  "ai_evidence_records": 25,
+  "valid_records": 25,
+  "invalid_records": 0,
+  "category_counts": {
+    "curb": 4,
+    "dropped_curb": 2,
+    "obstacle": 3,
+    "ramp": 4,
+    "stairs": 4,
+    "surface": 4,
+    "tactile_paving": 4
+  },
+  "predicted_value_counts": {
+    "present": 1,
+    "smooth": 1,
+    "uneven": 3,
+    "unknown": 20
+  },
+  "unknown_observations": 20,
+  "exact_duplicate_groups": [],
+  "issues": [],
+  "normalization_rules": {
+    "invalid_category": "other",
+    "invalid_or_missing_value": "unknown",
+    "confidence": "finite numeric value clamped to 0..1; invalid values become 0"
+  }
+}

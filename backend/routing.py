@@ -188,7 +188,8 @@ class PedestrianGraph:
             source = _truth(props.get("source"))
             label = props.get("evidence_type") or props.get("feature_name") or "accessibility condition"
             if status in VERIFIED:
-                penalty += edge.duration_s * (0.5 if profile != "general" else 0.1)
+                if profile != "general":
+                    penalty += edge.duration_s * 0.5
                 warnings.append(f"Verified {label} evidence nearby")
             elif source == "gemini_ai" or props.get("model"):
                 warnings.append(f"{label} prediction needs verification")
@@ -216,6 +217,19 @@ class PedestrianGraph:
                     best[edge.end] = new_cost
                     heapq.heappush(queue, (new_cost, edge.end, nodes + (edge.end,), edges + (edge,)))
         return None
+
+    def validate_route(self, route: Route, start: str, goal: str) -> tuple[bool, str]:
+        """Validate that a route is a connected graph path from start to goal."""
+        if not route.edges or not route.nodes or route.nodes[0] != start or route.nodes[-1] != goal:
+            return False, "Route does not connect the requested graph nodes"
+        if len(route.nodes) != len(route.edges) + 1:
+            return False, "Route node and edge counts are inconsistent"
+        for index, edge in enumerate(route.edges):
+            if edge.start != route.nodes[index] or edge.end != route.nodes[index + 1]:
+                return False, "Route contains a disconnected edge"
+            if len(edge.coordinates) < 2:
+                return False, "Route contains incomplete edge geometry"
+        return True, ""
 
     def alternatives(self, start: str, goal: str, profile: str, count: int = 3) -> list[Route]:
         first = self.shortest_path(start, goal, profile)

@@ -11,3 +11,4 @@ __pycache__/
 data-pipeline/cache/
 **/__pycache__/
 *.backup-*.geojson
+firebase-debug.log

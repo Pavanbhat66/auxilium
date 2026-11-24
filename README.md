@@ -1,99 +1,79 @@
-## Mapillary accessibility evidence
+# AUXILIUM
 
-## Accessibility-aware routing backend
+AUXILIUM is an accessibility-aware pedestrian routing demo for Mangalore. It combines OSM pedestrian paths with Mapillary and Gemini accessibility observations, while keeping AI evidence subject to human review.
 
-The routing engine is in `backend/`. It builds a pedestrian graph from the OSM
-GeoJSON export, applies mobility-profile costs, returns up to three alternatives,
-and keeps unverified Gemini/Mapillary findings as warnings rather than confirmed
-barriers.
+## Run locally
 
-Start it from the repository root:
+From the repository root, start the routing API:
 
 ```bash
 python -m backend.server
 ```
 
-Then start the frontend in another terminal:
+In another terminal, start the frontend:
 
 ```bash
 cd frontend
+npm install
 npm run dev
 ```
 
-The frontend calls `POST /api/routes` through the Vite proxy. The API also
-provides `GET /api/health`. Replace `data-pipeline/output/pedestrian_paths.geojson`
-with Member 1's expanded export without changing the API contract.
+Open the local Vite URL shown in the terminal. Select two points on the map to request a route.
 
-Run routing tests with:
+## Main components
+
+- `frontend/` — React, Vite and Leaflet map application.
+- `backend/` — accessibility-aware pedestrian graph and route API.
+- `data-pipeline/` — OSM extraction, Mapillary/Gemini evidence, matching and review artifacts.
+- `api/` — Vercel production adapters for `/api/routes` and `/api/health`.
+- `firestore.rules` — owner-scoped Firebase Auth and review access rules.
+
+## Profiles
+
+- **General** uses valid pedestrian paths without accessibility filtering.
+- **Wheelchair** excludes confirmed barriers and cautiously ranks unknown conditions.
+- **Walking support** applies walking-specific costs for stairs, inclines and difficult surfaces.
+
+AI observations remain unverified until a human reviewer accepts, rejects or flags them.
+
+## Firebase
+
+Set these variables in `frontend/.env.local` or the deployment environment:
+
+```text
+VITE_FIREBASE_API_KEY=
+VITE_FIREBASE_AUTH_DOMAIN=
+VITE_FIREBASE_PROJECT_ID=
+VITE_FIREBASE_STORAGE_BUCKET=
+VITE_FIREBASE_MESSAGING_SENDER_ID=
+VITE_FIREBASE_APP_ID=
+```
+
+Without Firebase configuration, the app opens in local demo mode and stores review decisions in browser storage. Deploy rules after configuring Firebase:
+
+```bash
+firebase deploy --only firestore:rules
+```
+
+## Vercel deployment
+
+Keep the Vercel Root Directory at the repository root. Use:
+
+```text
+Framework Preset: Vite
+Install Command: npm --prefix frontend ci
+Build Command: npm --prefix frontend run build
+Output Directory: frontend/dist
+```
+
+The root `api/` directory provides the production routing endpoints. Leave `VITE_ROUTING_API_URL` unset when frontend and API share the same Vercel deployment.
+
+## Tests
 
 ```bash
 python -m unittest discover -s backend/tests -v
+python -m unittest discover -s data-pipeline/tests -v
+cd frontend && npm run build && npm run lint
 ```
 
-`firestore.rules` restricts each user document to its authenticated owner.
-
-The Mangalore ingestion pipeline reads `MAPILLARY_ACCESS_TOKEN`, fetches imagery and detections within the configured city bounding box, and writes evidence points to `data-pipeline/output/mangalore_mapillary_accessibility.geojson`.
-
-```powershell
-$env:MAPILLARY_ACCESS_TOKEN = "MLY|..."
-python data-pipeline/ingest_mapillary.py
-Copy-Item data-pipeline/output/mangalore_mapillary_accessibility.geojson frontend/public/data/mangalore_mapillary_accessibility.geojson
-```
-
-The frontend displays these points as review markers. They are deliberately marked `needs_review` and `accessibility_claim: unknown`; Mapillary detections must not be treated as verified accessible or inaccessible paths without path matching and human verification.
-
-Evidence updates publish the canonical GeoJSON, refresh the OSM matching report and review queue, and synchronize the frontend copy. The review queue contains both direct Mapillary detections and Gemini observations; existing reviewer decisions and notes are preserved by evidence ID.
-
-To enable optional AI image analysis, set the keys in the environment and pass `--ai`:
-
-```powershell
-$python = "D:\\AUXILIUM\\.venv\\Scripts\\python.exe"
-& $python data-pipeline/ingest_mapillary.py --ai --max-images 1
-Copy-Item data-pipeline/output/mangalore_mapillary_accessibility.geojson frontend/public/data/mangalore_mapillary_accessibility.geojson
-```
-
-The script loads `data-pipeline/.env` from either the repository root or the `data-pipeline` directory. It expects `MAPILLARY_ACCESS_TOKEN`, `GEMINI_API_KEY`, `GEMINI_MODEL`, `GEMINI_MAX_IMAGES`, and `AUXILIUM_AI_ANALYZE_ALL` there. By default, AI analyzes only images with existing relevant Mapillary detections. Set `AUXILIUM_AI_ANALYZE_ALL=1` to analyze all collected images. AI findings contain a model, confidence, explanation, and `needs_review` status; `unknown` is retained when the image does not support a conclusion.
-
-## Local evidence quality and review
-
-These commands use existing local GeoJSON only; they do not call Mapillary or Gemini:
-
-```powershell
-$python = "D:\\AUXILIUM\\.venv\\Scripts\\python.exe"
-& $python data-pipeline/accessibility_quality.py validate
-& $python data-pipeline/accessibility_quality.py match
-& $python data-pipeline/accessibility_quality.py review-init
-```
-
-They create `data-pipeline/output/accessibility_validation_report.json`, `osm_matching_report.json`, and `accessibility_review_queue.csv`. Review decisions must be one of `pending`, `confirmed`, `rejected`, or `needs_more_evidence`; export a reviewed queue with:
-
-```powershell
-& $python data-pipeline/accessibility_quality.py review-export --input data-pipeline/output/accessibility_review_queue.csv
-```
-
-Matching remains provisional until the expanded OSM dataset replaces the current six-path extract.
-
-## Complete Mapillary image analysis workflow
-
-The resumable workflow uses only the configured Mangalore bbox and does not start Gemini analysis during discovery:
-
-```powershell
-$python = "D:\\AUXILIUM\\.venv\\Scripts\\python.exe"
-
-# Discover all paginated Mapillary images and persist the inventory.
-& $python data-pipeline/mangalore_ai_pipeline.py discover
-
-# Preview workload without Gemini calls.
-& $python data-pipeline/mangalore_ai_pipeline.py preview
-
-# Analyze a small batch; completed images are persisted and skipped on resume.
-& $python data-pipeline/mangalore_ai_pipeline.py analyze --batch-size 1
-
-# Resume another bounded batch later.
-& $python data-pipeline/mangalore_ai_pipeline.py resume --batch-size 5
-
-# Regenerate coverage statistics.
-& $python data-pipeline/mangalore_ai_pipeline.py coverage
-```
-
-Use `--detection-filter` only when intentionally limiting analysis to images with existing Mapillary detections. The default workflow analyzes every discovered eligible image with a permitted thumbnail, including images without detections. Quota exhaustion marks the current image `quota_blocked`, preserves completed work, and leaves remaining images pending.
+The 50 metre evidence-to-OSM matching threshold is defined in `data-pipeline/accessibility_quality.py` and should remain unchanged.

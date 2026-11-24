@@ -1,7 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Circle, CircleMarker, MapContainer, Marker, Polyline, Popup, TileLayer, useMap, useMapEvents } from "react-leaflet";
+import L from "leaflet";
+import markerIcon from "leaflet/dist/images/marker-icon.png";
+import markerIconRetina from "leaflet/dist/images/marker-icon-2x.png";
+import markerShadow from "leaflet/dist/images/marker-shadow.png";
 import "leaflet/dist/leaflet.css";
 import { loadReviewDecisions, saveReviewDecision } from "../services/reviews";
+
+L.Icon.Default.mergeOptions({ iconUrl: markerIcon, iconRetinaUrl: markerIconRetina, shadowUrl: markerShadow });
 
 function LocationSelector({ onLocationPick }) {
   useMapEvents({ click: (event) => onLocationPick([event.latlng.lat, event.latlng.lng]) });
@@ -57,6 +63,7 @@ function MapView({ profile, onRouteChange }) {
   const [locationError, setLocationError] = useState("");
   const [routeError, setRouteError] = useState("");
   const [routeLoading, setRouteLoading] = useState(false);
+  const [reviewSyncError, setReviewSyncError] = useState("");
   const [evidence, setEvidence] = useState([]);
   const [osmPaths, setOsmPaths] = useState([]);
   const [reviewDecisions, setReviewDecisions] = useState(() => {
@@ -80,6 +87,8 @@ function MapView({ profile, onRouteChange }) {
         localStorage.setItem("auxilium-review-decisions", JSON.stringify(merged));
         return merged;
       });
+    }).catch(() => {
+      if (active) setReviewSyncError("Cloud review sync is unavailable; using local decisions.");
     });
     return () => { active = false; };
   }, []);
@@ -138,7 +147,8 @@ function MapView({ profile, onRouteChange }) {
     setRouteLoading(true);
     setRouteError("");
     try {
-      const response = await fetch("/api/routes", {
+      const apiBase = (import.meta.env.VITE_ROUTING_API_URL || "").replace(/\/$/, "");
+      const response = await fetch(`${apiBase}/api/routes`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         signal,
@@ -245,7 +255,7 @@ function MapView({ profile, onRouteChange }) {
     <div className="location-controls">
       <button type="button" className={tracking ? "location-button tracking" : "location-button"} onClick={() => { setLocationError(""); setTracking((active) => !active); }} aria-pressed={tracking}>{tracking ? "Stop live location" : "Use live location"}</button>
       {currentLocation && <button type="button" className="location-button secondary" onClick={useCurrentLocationAsStart}>Set as route start</button>}
-      <p className="location-status" aria-live="polite">{routeLoading ? "Calculating accessible route…" : routeError || locationError || (tracking ? "Updating your location…" : currentLocation ? "Location available" : "Location sharing is off")}</p>
+      <p className="location-status" aria-live="polite">{routeLoading ? "Calculating accessible route…" : routeError || reviewSyncError || locationError || (tracking ? "Updating your location…" : currentLocation ? "Location available" : "Location sharing is off")}</p>
     </div>
     {routes.length > 1 && <section className="route-options" aria-label="Alternative routes">
       <p>Route options</p>

@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">AUXILIUM architecture</title>
+  <desc id="desc">Landscape architecture diagram showing high, mid and low level layers for the AUXILIUM accessibility-aware routing application.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#52606d"/>
+    </marker>
+    <style>
+      .title { font: 600 28px Arial, sans-serif; fill: #17212b; }
+      .band { font: 600 17px Arial, sans-serif; letter-spacing: 1px; fill: #52606d; }
+      .label { font: 600 17px Arial, sans-serif; fill: #17212b; }
+      .small { font: 14px Arial, sans-serif; fill: #52606d; }
+      .box { stroke-width: 2; rx: 10; }
+      .high { fill: #e8f1f5; stroke: #315a6d; }
+      .mid { fill: #f4efe5; stroke: #8a6a3b; }
+      .low { fill: #edf3ea; stroke: #55734e; }
+      .store { fill: #f1edf6; stroke: #72558c; }
+      .line { stroke: #52606d; stroke-width: 2; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect width="1600" height="900" fill="#fbfcfc"/>
+  <text x="70" y="58" class="title">AUXILIUM architecture</text>
+
+  <rect x="50" y="85" width="1500" height="150" fill="#f5f7f8" stroke="#9aa5b1" rx="14"/>
+  <text x="75" y="116" class="band">HIGH LEVEL</text>
+  <rect x="100" y="145" width="280" height="58" class="box high"/>
+  <text x="240" y="171" text-anchor="middle" class="label">Data and evidence</text>
+  <text x="240" y="191" text-anchor="middle" class="small">OSM · Mapillary · Gemini</text>
+  <rect x="510" y="145" width="300" height="58" class="box high"/>
+  <text x="660" y="171" text-anchor="middle" class="label">Accessibility routing</text>
+  <text x="660" y="191" text-anchor="middle" class="small">profiles and alternatives</text>
+  <rect x="940" y="145" width="280" height="58" class="box high"/>
+  <text x="1080" y="171" text-anchor="middle" class="label">Map and review app</text>
+  <text x="1080" y="191" text-anchor="middle" class="small">routes · evidence · decisions</text>
+  <rect x="1310" y="145" width="180" height="58" class="box high"/>
+  <text x="1400" y="171" text-anchor="middle" class="label">Firebase</text>
+  <text x="1400" y="191" text-anchor="middle" class="small">optional cloud sync</text>
+  <path d="M380 174 H510 M810 174 H940 M1220 174 H1310" class="line"/>
+
+  <rect x="50" y="265" width="1500" height="270" fill="#f5f7f8" stroke="#9aa5b1" rx="14"/>
+  <text x="75" y="296" class="band">MID LEVEL</text>
+  <rect x="90" y="330" width="390" height="150" class="box mid"/>
+  <text x="285" y="362" text-anchor="middle" class="label">Data pipeline</text>
+  <text x="285" y="392" text-anchor="middle" class="small">OSM extraction</text>
+  <text x="285" y="416" text-anchor="middle" class="small">Mapillary and Gemini evidence</text>
+  <text x="285" y="440" text-anchor="middle" class="small">validation · matching · review queue</text>
+  <rect x="605" y="330" width="390" height="150" class="box mid"/>
+  <text x="800" y="362" text-anchor="middle" class="label">Routing backend</text>
+  <text x="800" y="392" text-anchor="middle" class="small">POST /api/routes</text>
+  <text x="800" y="416" text-anchor="middle" class="small">pedestrian graph and profile costs</text>
+  <text x="800" y="440" text-anchor="middle" class="small">complete route validation</text>
+  <rect x="1120" y="330" width="350" height="150" class="box mid"/>
+  <text x="1295" y="362" text-anchor="middle" class="label">React frontend</text>
+  <text x="1295" y="392" text-anchor="middle" class="small">Leaflet map and OSM overlay</text>
+  <text x="1295" y="416" text-anchor="middle" class="small">route selection and profiles</text>
+  <text x="1295" y="440" text-anchor="middle" class="small">evidence review popups</text>
+  <path d="M480 405 H605 M995 405 H1120" class="line"/>
+
+  <rect x="50" y="565" width="1500" height="285" fill="#f5f7f8" stroke="#9aa5b1" rx="14"/>
+  <text x="75" y="596" class="band">LOW LEVEL</text>
+  <rect x="90" y="630" width="390" height="150" class="box low"/>
+  <text x="285" y="660" text-anchor="middle" class="label">Pipeline modules</text>
+  <text x="285" y="688" text-anchor="middle" class="small">extract_osm.py</text>
+  <text x="285" y="712" text-anchor="middle" class="small">ingest_mapillary.py</text>
+  <text x="285" y="736" text-anchor="middle" class="small">accessibility_quality.py</text>
+  <text x="285" y="760" text-anchor="middle" class="small">mangalore_ai_pipeline.py</text>
+  <rect x="605" y="630" width="390" height="150" class="box low"/>
+  <text x="800" y="660" text-anchor="middle" class="label">Graph modules</text>
+  <text x="800" y="688" text-anchor="middle" class="small">GeoJSON loader and graph builder</text>
+  <text x="800" y="712" text-anchor="middle" class="small">directed edges and OSM attributes</text>
+  <text x="800" y="736" text-anchor="middle" class="small">shortest path and alternatives</text>
+  <text x="800" y="760" text-anchor="middle" class="small">route serialization</text>
+  <rect x="1120" y="630" width="350" height="150" class="box low"/>
+  <text x="1295" y="660" text-anchor="middle" class="label">Frontend modules</text>
+  <text x="1295" y="688" text-anchor="middle" class="small">App.jsx and MapView.jsx</text>
+  <text x="1295" y="712" text-anchor="middle" class="small">auth.js and reviews.js</text>
+  <text x="1295" y="736" text-anchor="middle" class="small">firebase.js configuration</text>
+  <text x="1295" y="760" text-anchor="middle" class="small">local fallback and Firestore sync</text>
+  <path d="M285 480 V630 M800 480 V630 M1295 480 V630" class="line"/>
+
+  <rect x="90" y="805" width="390" height="28" class="box store"/>
+  <text x="285" y="824" text-anchor="middle" class="small">pedestrian_paths.geojson + evidence GeoJSON</text>
+</svg>

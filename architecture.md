@@ -2,6 +2,8 @@
 
 > A3 landscape reference. The diagram is intentionally limited to the current implementation: OSM pedestrian data, Mapillary/Gemini evidence, the routing API, the React map, and optional Firebase services.
 
+![AUXILIUM architecture diagram](architecture.svg)
+
 ```mermaid
 %%{init: {"flowchart": {"curve": "linear", "nodeSpacing": 28, "rankSpacing": 42}, "theme": "base", "themeVariables": {"fontFamily": "Arial", "fontSize": "15px", "primaryTextColor": "#17212b", "lineColor": "#52606d", "clusterBkg": "#f5f7f8", "clusterBorder": "#9aa5b1"}}}%%
 flowchart TB
